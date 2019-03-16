@@ -6,7 +6,6 @@ const MongoClient = require('mongodb').MongoClient;
 const dburl = 'mongodb://localhost:27017';
 const client = new MongoClient(dburl);
 const dbName = 'app'
-var db = null;
 
 /*
  * Handler functions definitions
@@ -20,13 +19,13 @@ function register (req, res) {
     if (username == undefined || password == undefined) {
         res.status(400).end();
     } else {
-        db.collection("users").find({'username': username}).toArray(function(err, docs) {
+        app.db.collection("users").find({'username': username}).toArray(function(err, docs) {
             if (err != null) {
                 console.log(err);
             }
             
             if (docs.length == 0) {
-                db.collection("users").insertOne({
+                app.db.collection("users").insertOne({
                     "username" : username,
                     "password" : password,
                     "friends" : [],
@@ -49,7 +48,7 @@ function login (req, res) {
     if (username == undefined || password == undefined) {
         res.status(400).end();
     } else {
-        db.collection("users").find({'username': username, 'password' : password}).toArray(function(err, docs) {
+        app.db.collection("users").find({'username': username, 'password' : password}).toArray(function(err, docs) {
             if (err != null) {
                 console.log(err);
             }
@@ -80,15 +79,16 @@ function main() {
     client.connect(function(err) {
         if (err != null) {
             console.log(err);
+            process.exit(1);
         }
         console.log("Connected successfully to db");
-      
-        db = client.db(dbName);
-    });
+      ;
+        app.db = client.db(dbName);
 
-    app.listen(serverPort, function () {
-        console.log(`App listening on port ${serverPort}`);
-    })
+        app.listen(serverPort, function () {
+            console.log(`App listening on port ${serverPort}`);
+        })
+    });
 }
 
 /*
