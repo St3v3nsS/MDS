@@ -1,4 +1,4 @@
-#!bin/sh
+#!/bin/sh
 
 # Register curl
 curl -H "username:bogdan" -H "password:ceva" -v localhost:3000/register
