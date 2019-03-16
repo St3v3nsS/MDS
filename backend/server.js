@@ -1,98 +1,114 @@
-const express = require('express');
+/*
+ * Import modules
+ */
+const MongoClient = require("mongodb").MongoClient;
+const express = require("express");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const async = require("async");
+const configuration = require("./configuration");
+
 const app = express();
-const serverPort = 3000;
+const serverPort = process.env.PORT || configuration.serverPort;
 
-const MongoClient = require('mongodb').MongoClient;
-const dburl = 'mongodb://localhost:27017';
-const client = new MongoClient(dburl);
-const dbName = 'app'
+// Set morgan for development
+// todo: to be removed when it's in production
+if (app.get("env") === "development") {
+    app.use(morgan("dev"));
+}
+else {
+    app.use(morgan("common"));
+}
 
-/*
- * Handler functions definitions
-*/
+console.log("Startup " + new Date());
 
-function register (req, res) {
-    console.log(req.headers)
-    let username = req.get("username");
-    let password = req.get("password");
+async.auto({
+        mongodb: [function (callback) {
+            const client = new MongoClient(configuration.dburl, {useNewUrlParser: true});
 
-    if (username == undefined || password == undefined) {
-        res.status(400).end();
-    } else {
-        app.db.collection("users").find({'username': username}).toArray(function(err, docs) {
-            if (err != null) {
-                console.log(err);
-            }
-            
-            if (docs.length == 0) {
-                app.db.collection("users").insertOne({
-                    "username" : username,
-                    "password" : password,
-                    "friends" : [],
-                    "friend_requests" : [],
-                }, function() {
-                    res.status(200).end();
+            client.connect(function(err) {
+                if (err != null) {
+                    return callback(err);
+                }
+
+                app.db = client.db(configuration.dbName);
+
+                // Create app.dbs an object which will stores
+                // references to all database collection
+                app.dbs = {};
+                app.dbs.users = app.db.collection("users");
+                app.dbs.events = app.db.collection("events");
+
+                // Ensure index on collections elements
+                app.dbs.users.createIndex({"username": 1}, {"background": true});
+                // todo: to be added when we decide how to index the events collection
+                // app.dbs.events.createIndex({"events"})
+
+                // todo: to be removed
+                console.log("Connected successfully to db");
+                return callback(null, "Connected successfully to db");
+            });
+        }],
+        router: ["mongodb", function (results, callback) {
+            // parse incoming requests
+            app.use(bodyParser.urlencoded({ extended: true }));
+            app.use(bodyParser.json());
+
+            // Middleware for authentication
+            app.use(function (req, res, next) {
+                // todo: authentication, security
+                return next();
+            });
+
+            // Middleware for registration
+            app.use("/register", (require("./routes/register"))(app));
+
+            // Middleware for login
+            // todo: implementation
+            // app.use("/login", (require("./routes/login"))(app));
+
+            // Middleware for status 404
+            app.use(function (req, res, next) {
+                res.status(404).format({
+                    json: function () {
+                        res.jsonp({
+                            ok: false,
+                            error: '404',
+                        });
+                    },
+                    default: function () {
+                        res.send('404');
+                    }
                 });
-            } else {
-                res.status(400).end();
-            }
-        });
+            });
+
+            // Middleware for status 500
+            app.use(function (err, req, res, next) {
+                res.status(500).format({
+                    json: function () {
+                        res.send({
+                            ok: false,
+                            error: 'Error: ' + (err.message || err),
+                        })
+                    },
+                    default: function () {
+                        res.send('Error.500: ' + (err.message || err));
+                    }
+                })
+            });
+
+            return callback(null, 'ok');
+        }],
+        startServer: ["mongodb", "router", function (results, callback) {
+            app.listen(serverPort, function (err) {
+                if (err) {
+                    console.log(`Server can't start on port ${serverPort}`);
+                    return callback(err);
+                }
+
+                console.log(`Server started with success on port ${serverPort}`);
+                return callback();
+            })
+        }]
     }
-}
-
-function login (req, res) {
-    console.log(req.headers)
-    let username = req.get("username");
-    let password = req.get("password");
-
-    if (username == undefined || password == undefined) {
-        res.status(400).end();
-    } else {
-        app.db.collection("users").find({'username': username, 'password' : password}).toArray(function(err, docs) {
-            if (err != null) {
-                console.log(err);
-            }
-            
-            if (docs.length == 0) {
-                res.status(400).end();
-            } else if (docs.length == 1) {
-                res.status(200).end();
-            }
-        });
-    }
-}
-
-/*
- * Declare handler functions
-*/
-
-app.get('/register', register);
-app.get('/login', login);
-
-
-/*
- * Main function
-*/
-
-function main() {
-    /* Start the db */
-    client.connect(function(err) {
-        if (err != null) {
-            console.log(err);
-            process.exit(1);
-        }
-        console.log("Connected successfully to db");
-      ;
-        app.db = client.db(dbName);
-
-        app.listen(serverPort, function () {
-            console.log(`App listening on port ${serverPort}`);
-        })
-    });
-}
-
-/*
- * Start the main function
-*/
-
-main();
+);
