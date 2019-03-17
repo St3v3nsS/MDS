@@ -1,0 +1,38 @@
+version: '3.5'
+
+networks:
+  mds-project-server:
+    name: mds-project-server
+
+services:
+  mongo:
+    image: mongo:4
+    container_name: mds-project-server-mongodb
+    networks:
+      mds-project-server:
+        aliases:
+          - mds-mongo
+    volumes:
+      - ./tmp/mongo:/data/db
+    command: --smallfiles
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 1m
+  app:
+    build: .
+    image: mds-project-server-image:latest
+    container_name: mds-project-server
+    volumes:
+      - .:/srv/app:delegated
+    environment:
+      - NODE_ENV=development
+      - DEBUG=mds:*
+      - DEBUG_COLORS=yes
+    ports:
+      - "127.0.0.1:3000:3000"
+    command:
+      - "node"
+      - "server.js"
+    networks:
+      mds-project-server:

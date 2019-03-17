@@ -111,7 +111,7 @@ module.exports = function (app) {
 
     router.post("/", function (req, res, next) {
 
-        debug("register: " + dmp(req.query));
+        debug("register: " + dmp(req.body));
         // insert in mongo
         app.dbs.users.insertOne(
             // document

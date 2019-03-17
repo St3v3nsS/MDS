@@ -1,7 +1,7 @@
 /*
  * Environment variables used to configure the server
  */
-const dburl = 'mongodb://localhost:27017';
+const dburl = 'mongodb://mds-mongo:27017';
 const dbName = 'app';
 const serverPort = 3000;
 
