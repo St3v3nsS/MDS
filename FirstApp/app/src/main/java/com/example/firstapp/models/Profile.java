@@ -1,4 +1,4 @@
-package com.example.firstapp;
+package com.example.firstapp.models;
 
 import org.jetbrains.annotations.NotNull;
 
