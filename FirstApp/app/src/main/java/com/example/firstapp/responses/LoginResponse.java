@@ -1,4 +1,4 @@
-package com.example.firstapp.models;
+package com.example.firstapp.responses;
 
 public class LoginResponse {
 

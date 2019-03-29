@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.example.firstapp.LoginCredentials;
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
-import com.example.firstapp.models.LoginResponse;
+import com.example.firstapp.responses.LoginResponse;
 import com.example.firstapp.models.Profile;
 import com.example.firstapp.services.RetrofitClient;
 

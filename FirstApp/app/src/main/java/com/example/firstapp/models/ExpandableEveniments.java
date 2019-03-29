@@ -1,35 +1,47 @@
 package com.example.firstapp.models;
 
-import java.util.ArrayList;
+import com.example.firstapp.interfaces.Api;
+import com.example.firstapp.responses.EventsResponse;
+import com.example.firstapp.services.RetrofitClient;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import retrofit2.Call;
+
 public class ExpandableEveniments {
 
-    public static HashMap<String, List<String>> getEveniments(){
-        HashMap<String, List<String>> eveniments = new LinkedHashMap<>();
-        List<String> morningEvents = new ArrayList<>();
+    private static final HashMap<String, EventClass> eveniments = new LinkedHashMap<>();
 
-        morningEvents.add("Take coffe");
-        morningEvents.add("Eat breakfast");
-        morningEvents.add("Meeting with mr. Waffles!");
 
-        List<String> noonEvents = new ArrayList<>();
+    public static HashMap<String, EventClass> getEveniments(){
 
-        noonEvents.add("Eat lunch");
-        noonEvents.add("Meeting with lawyer Andrew!");
+        Api retrofitClient = RetrofitClient.createService(Api.class);
+        Call<EventsResponse> call = retrofitClient.getEvents();
 
-        List<String> nightEvents = new ArrayList<>();
-
-        nightEvents.add("Eat dinner");
-        nightEvents.add("Go to club!");
-        nightEvents.add("DO NOT DRINK TOO MUCH! JOB TOMORROW!");
-
-        eveniments.put("Morning Events", morningEvents);
-        eveniments.put("Noon Events", noonEvents);
-        eveniments.put("Night Events", nightEvents);
-
+        try {
+            List<EventClass> eventClassList = call.execute().body().getEvents();
+            for (int i = 0; i < eventClassList.size(); i++) {
+                eveniments.put("Event ~~~~~~~ " + eventClassList.get(i).getName(), eventClassList.get(i));
+            }
+        }catch (IOException eveniments1){
+            eveniments1.printStackTrace();
+        }
         return eveniments;
+
     }
+
+    public static void addEvent(@NotNull EventClass eventClass){
+        eveniments.put("Event ~~~~~~~ " + eventClass.getName(), eventClass);
+    }
+
+    public static void deleteEvent(@NotNull EventClass eventClass){
+        eveniments.remove(eventClass.getName());
+    }
+
+
 }

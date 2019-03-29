@@ -9,6 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.example.firstapp.R;
+import com.example.firstapp.models.EventClass;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +18,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<String> expandableListTitles;
-    private HashMap<String, List<String>> expandableEvents;
+    private HashMap<String, EventClass> expandableEvents;
 
     public CustomExpandableListAdapter(Context context, List<String> expandableListTitles,
-                                       HashMap<String, List<String>> expandableEvents) {
+                                       HashMap<String, EventClass> expandableEvents) {
         this.context = context;
         this.expandableListTitles = expandableListTitles;
         this.expandableEvents = expandableEvents;
@@ -28,7 +29,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return expandableEvents.get(expandableListTitles.get(groupPosition)).get(childPosition);
+        return expandableEvents.get(expandableListTitles.get(groupPosition));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String expandedListText = (String) getChild(groupPosition, childPosition);
+        final EventClass expandedListText = (EventClass) getChild(groupPosition, childPosition);
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,7 +72,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.expandedListItem);
-        expandedListTextView.setText(expandedListText);
+        expandedListTextView.setText(expandedListText.toString());
         return convertView;
     }
 
@@ -87,13 +88,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return expandableEvents.get(expandableListTitles.get(groupPosition)).size();
+        return 1;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
         return expandableListTitles.get(groupPosition);
     }
-
 
 }

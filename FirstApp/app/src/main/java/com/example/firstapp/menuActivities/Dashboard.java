@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
+import com.example.firstapp.models.EventClass;
 import com.example.firstapp.models.ExpandableEveniments;
 import com.example.firstapp.services.CustomExpandableListAdapter;
+import com.example.firstapp.services.ExpandableEvAsyncTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +26,8 @@ public class Dashboard extends android.support.v4.app.Fragment {
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
-    HashMap<String, List<String>> expandableListDetail;
+    ProgressBar progressBar;
+    HashMap<String, EventClass> expandableListDetail;
 
     @Nullable
     @Override
@@ -39,45 +43,9 @@ public class Dashboard extends android.support.v4.app.Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
-        expandableListDetail = ExpandableEveniments.getEveniments();
-        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-        expandableListAdapter = new CustomExpandableListAdapter(getContext(), expandableListTitle, expandableListDetail);
-        expandableListView.setAdapter(expandableListAdapter);
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+        progressBar = view.findViewById(R.id.gettingEventsProgressBar);
+        new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView).execute("");
 
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getContext(),
-                        expandableListTitle.get(groupPosition) + " List Expanded.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getContext(),
-                        expandableListTitle.get(groupPosition) + " List Collapsed.",
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                Toast.makeText(
-                        getContext(),
-                        expandableListTitle.get(groupPosition)
-                                + " -> "
-                                + expandableListDetail.get(
-                                expandableListTitle.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT
-                ).show();
-                return false;
-            }
-        });
     }
 }
