@@ -29,24 +29,24 @@ module.exports = function (app) {
     // Middleware for checking if email is already used
     router.use(function (req, res, next) {
         app.dbs.users.findOne(
-                {"email": req.body.email},
-                // Set projection option to return just the id field
-                {"_id": 1},
-                // Callback
-                // todo: refactor as a extern function for performance reason
-                function (error, result) {
-                    if (error) {
-                        return next(error);
-                    }
-
-                    if (result == null) {
-                        return next();
-                    }
-                    else {
-                        return next("Email is already used!");
-                    }
+            {"email": req.body.email},
+            // Set projection option to return just the id field
+            {"_id": 1},
+            // Callback
+            // todo: refactor as a extern function for performance reason
+            function (error, result) {
+                if (error) {
+                    return next(error);
                 }
-            );
+
+                if (result == null) {
+                    return next();
+                }
+                else {
+                    return next("Email is already used!");
+                }
+            }
+        );
     });
 
     // Middleware for checking if username is valid
@@ -95,7 +95,9 @@ module.exports = function (app) {
         return next();
     });
 
+
     // Middleware for password confirmation validation
+    /*
     router.use(function (req, res, next) {
         if (!req.body.passwordConfirmation) {
             return next(new Error("no password confirmation"));
@@ -107,7 +109,7 @@ module.exports = function (app) {
 
         return next();
     });
-
+    */
 
     router.post("/", function (req, res, next) {
 
@@ -120,14 +122,20 @@ module.exports = function (app) {
                 "username": req.body.username,
                 "password": req.body.password,
             },
-            // todo: refactor as a extern function 
+            // todo: refactor as a extern function
             function (err) {
                 if (err) {
                     return next(err);
                 }
-                
+
+                let registerObject = {
+                    "username": req.body.username,
+                    "email": req.body.email,
+                    "message": "OK"
+                };
+
                 // Succes insertion in db
-                return res.end();
+                return res.json(registerObject);
             }
         );
     });

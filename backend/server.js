@@ -64,8 +64,7 @@ async.auto({
             app.use("/register", (require("./routes/register"))(app));
 
             // Middleware for login
-            // todo: implementation
-            // app.use("/login", (require("./routes/login"))(app));
+            app.use("/login", (require("./routes/login"))(app));
 
             // Middleware for status 404
             app.use(function (req, res, next) {
@@ -88,7 +87,7 @@ async.auto({
                     json: function () {
                         res.send({
                             ok: false,
-                            error: 'Error: ' + (err.message || err),
+                            message: 'Error: ' + (err.message || err),
                         })
                     },
                     default: function () {
@@ -110,5 +109,9 @@ async.auto({
                 return callback();
             })
         }]
+    }, function(error, res) {
+        if (error) {
+            console.log(error);
+        }
     }
 );
