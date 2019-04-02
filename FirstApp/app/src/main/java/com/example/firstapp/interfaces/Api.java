@@ -5,6 +5,7 @@ import com.example.firstapp.SignUpCredentials;
 import com.example.firstapp.models.EventClass;
 import com.example.firstapp.responses.AddNoteResponse;
 import com.example.firstapp.responses.EventsResponse;
+import com.example.firstapp.responses.FriendsResponse;
 import com.example.firstapp.responses.LoginResponse;
 
 import okhttp3.ResponseBody;
@@ -28,4 +29,7 @@ public interface Api {
 
     @PATCH("user/events/{name}")
     Call<AddNoteResponse> addEvent(@Path ("name") String name, @Body EventClass eventClass);
+
+    @GET("user/friends")
+    Call<FriendsResponse> getFriends();
 }

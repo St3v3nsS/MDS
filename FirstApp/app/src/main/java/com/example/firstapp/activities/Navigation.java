@@ -17,13 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.firstapp.R;
 import com.example.firstapp.menuActivities.AddNote;
 import com.example.firstapp.menuActivities.CalendarNextDays;
 import com.example.firstapp.menuActivities.Dashboard;
+import com.example.firstapp.menuActivities.FriendsFragment;
 import com.example.firstapp.menuActivities.Logout;
 import com.example.firstapp.menuActivities.NavSend;
 import com.example.firstapp.menuActivities.NavShare;
@@ -142,6 +142,8 @@ public class Navigation extends AppCompatActivity
             fragment = new AddNote();
         } else if (id == R.id.nav_next_days) {
             fragment = new CalendarNextDays();
+        } else if (id == R.id.nav_friends){
+            fragment = new FriendsFragment();
         } else if (id == R.id.nav_logout) {
             fragment = new Logout();
         } else if (id == R.id.nav_share) {

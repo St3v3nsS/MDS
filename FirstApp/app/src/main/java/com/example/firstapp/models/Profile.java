@@ -40,4 +40,12 @@ public class Profile implements Serializable {
 
     public Profile() {
     }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

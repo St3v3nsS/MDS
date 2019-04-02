@@ -3,15 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
-    <ExpandableListView
-        android:id="@+id/expandableListView"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:layout_marginTop="200dp"
-        android:layout_centerHorizontal="true"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp" />
 
     <ProgressBar
         android:id="@+id/gettingEventsProgressBar"
@@ -36,6 +27,27 @@
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         android:text="@string/upcoming_events" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp">
+
+        <ExpandableListView
+            android:id="@+id/expandableListView"
+            android:layout_below="@+id/pullToRefresh"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="200dp"
+            android:layout_centerHorizontal="true"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 
 </RelativeLayout>
