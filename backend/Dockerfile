@@ -1,7 +1,5 @@
 FROM node:10.15.3-alpine
 
-EXPOSE 3000
-
 # Create app directory
 RUN mkdir -p /srv/app
 WORKDIR /srv/app
@@ -16,6 +14,7 @@ ENV NODE_ENV 'development'
 # Copy sources
 COPY . /srv/app
 
-RUN date +"%Y%m%d%H%M%S" > /srv/build.txt
+EXPOSE 3000
 
-CMD ["node", "server.js"]
+RUN date +"%Y%m%d%H%M%S" > /srv/build.txt
+CMD ["npm", "start"]

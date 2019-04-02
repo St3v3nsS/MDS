@@ -13,7 +13,7 @@ services:
         aliases:
           - mds-mongo
     volumes:
-      - ./tmp/mongo:/data/db
+      - /data:/data/db
     command: --smallfiles
     logging:
       driver: "json-file"
@@ -23,6 +23,7 @@ services:
     build: .
     image: mds-project-server-image:latest
     container_name: mds-project-server
+    restart: always
     volumes:
       - .:/srv/app:delegated
     environment:
@@ -30,9 +31,10 @@ services:
       - DEBUG=mds:*
       - DEBUG_COLORS=yes
     ports:
-      - "127.0.0.1:3000:3000"
-    command:
-      - "node"
-      - "server.js"
+      - "127.0.0.1:4000:3000"
+    depends_on:
+      - mongo
+    links:
+      - mongo
     networks:
       mds-project-server:
