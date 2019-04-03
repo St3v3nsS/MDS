@@ -22,35 +22,33 @@
         android:inputType="textPersonName"
         android:hint="@string/name" />
 
-    <EditText
+    <TextView
         android:id="@+id/add_note_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/add_note_name"
-        android:inputType="textPersonName"
         android:hint="@string/start_date" />
 
-    <EditText
+    <TextView
         android:id="@+id/add_note_end_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/add_note_start_date"
-        android:inputType="textPersonName"
         android:hint="@string/end_date" />
 
-    <EditText
+    <MultiAutoCompleteTextView
         android:id="@+id/add_note_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/add_note_end_date"
-        android:inputType="textPersonName"
-        android:hint="@string/friends" />
+        android:hint="@string/friends"
+        android:completionThreshold="1"/>
 
     <Button
         android:id="@+id/add_note_add_event"

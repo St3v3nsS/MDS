@@ -157,7 +157,6 @@ public class Navigation extends AppCompatActivity
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
             fragmentTransaction.replace(R.id.content_frame , fragment).commit();
-
         }
 
 

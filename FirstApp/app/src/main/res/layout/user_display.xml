@@ -13,9 +13,9 @@
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/avatar" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/profile_photo_round"/>
 
         <LinearLayout
             android:layout_width="match_parent"
