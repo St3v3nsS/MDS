@@ -1,11 +1,12 @@
 package com.example.firstapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,8 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.firstapp.R;
@@ -24,8 +27,6 @@ import com.example.firstapp.menuActivities.AddNote;
 import com.example.firstapp.menuActivities.CalendarNextDays;
 import com.example.firstapp.menuActivities.Dashboard;
 import com.example.firstapp.menuActivities.FriendsFragment;
-import com.example.firstapp.menuActivities.Logout;
-import com.example.firstapp.menuActivities.NavSend;
 import com.example.firstapp.menuActivities.NavShare;
 import com.example.firstapp.menuActivities.ProfilePhoto;
 import com.example.firstapp.models.Profile;
@@ -34,7 +35,6 @@ public class Navigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Profile profile;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,6 @@ public class Navigation extends AppCompatActivity
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, new Dashboard()).commit();
-
 
 
         setContentView(R.layout.activity_navigation);
@@ -74,6 +73,7 @@ public class Navigation extends AppCompatActivity
         TextView email = (TextView) header.findViewById(R.id.email);
         email.setText(profile.getEmail());
 
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -99,6 +99,7 @@ public class Navigation extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation, menu);
+
         return true;
     }
 
@@ -117,7 +118,7 @@ public class Navigation extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -137,11 +138,9 @@ public class Navigation extends AppCompatActivity
         } else if (id == R.id.nav_friends){
             fragment = new FriendsFragment();
         } else if (id == R.id.nav_logout) {
-            fragment = new Logout();
+            logout();
         } else if (id == R.id.nav_share) {
             fragment = new NavShare();
-        } else if (id == R.id.nav_send) {
-            fragment = new NavSend();
         }
 
         if(fragment != null){
@@ -156,4 +155,30 @@ public class Navigation extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void logout() {
+        ViewGroup viewGroup = findViewById(R.id.content_frame);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.logout_dialog, viewGroup, false);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        Button yes = (Button) dialogView.findViewById(R.id.yes);
+
+        cancel.setOnClickListener(v->{
+            dialog.dismiss();
+        });
+
+        yes.setOnClickListener(v->{
+
+            Intent intent = new Intent(Navigation.this, MainActivity.class);
+            Navigation.this.startActivity(intent);
+        });
+
+    }
+
 }

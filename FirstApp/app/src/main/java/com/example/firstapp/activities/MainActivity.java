@@ -140,4 +140,9 @@ public class MainActivity extends Activity {
         super.onPause();
         System.out.println("Pausing...");
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

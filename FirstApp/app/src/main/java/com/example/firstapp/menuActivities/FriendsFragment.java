@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class FriendsFragment extends Fragment {
     private RecyclerView friendsList;
     private ArrayList<Profile> friendsResponse;
     private FriendsAdapter friendsAdapter;
+    private Button addFriend;
 
     @Nullable
     @Override
@@ -49,6 +51,7 @@ public class FriendsFragment extends Fragment {
         friendsAdapter = new FriendsAdapter(friendsResponse);
         friendsList.setAdapter(friendsAdapter);
 
+        addFriend = (Button) rootView.findViewById(R.id.add_friend);
         Api friendReq = RetrofitClient.createService(Api.class);
         Call<FriendsResponse> call = friendReq.getFriends();
         call.enqueue(new Callback<FriendsResponse>() {

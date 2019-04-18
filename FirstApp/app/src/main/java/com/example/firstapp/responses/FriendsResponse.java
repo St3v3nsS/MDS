@@ -8,6 +8,7 @@ public class FriendsResponse {
 
     private ArrayList<Profile> friends;
 
+
     public FriendsResponse(ArrayList<Profile> friends) {
         this.friends = friends;
     }

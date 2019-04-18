@@ -30,4 +30,9 @@
     <string name="user_name">User name</string>
     <string name="user_status">User Status</string>
     <string name="upload_photo">Upload photo</string>
+    <string name="view_events">View Events</string>
+    <string name="do_you_really_want_to_log_out">Do you really want to log out?</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="add_friend">Add friend</string>
 </resources>

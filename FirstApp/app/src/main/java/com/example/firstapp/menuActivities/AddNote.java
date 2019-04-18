@@ -47,6 +47,7 @@ public class AddNote extends Fragment {
     private Button addNote;
     private TextView startDate;
     private TextView endDate;
+    private String dateBegin;
 
     private View rootView;
     @Nullable
@@ -64,6 +65,10 @@ public class AddNote extends Fragment {
         getData();
         getActivity().setTitle("Add Note");
 
+        Bundle bundle = getArguments();
+        if (bundle != null)
+            dateBegin = bundle.getString("date");
+
         return rootView;
     }
 
@@ -75,9 +80,18 @@ public class AddNote extends Fragment {
         startDate.setOnClickListener(v -> {                 //  Handle startDate on click for getting data
             int currentHour = calendar.get(Calendar.HOUR_OF_DAY);       // get the Hour
             int currentMinutes = calendar.get(Calendar.MINUTE);         // get the minute
+            int currentYear = calendar.get(Calendar.YEAR);              // get the year
+            int currentMonth = calendar.get(Calendar.MONTH) + 1;            // get the month
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);//get the day
             TimePickerDialog timePickerDialog = new TimePickerDialog(rootView.getContext(),     // create the dialog
                     (view, hourOfDay, minute) -> {      // onTimeSet function
                         StringBuilder sb = new StringBuilder();
+                        if(dateBegin == null){
+                            sb.append(currentYear+":"); sb.append(currentMonth+":"); sb.append(currentDay+" ");
+                        }
+                        else{
+                            sb.append(dateBegin);
+                        }
 
                         if (hourOfDay <= 9){
                             sb.append("0");
@@ -100,9 +114,18 @@ public class AddNote extends Fragment {
         endDate.setOnClickListener(v ->{        // Handle the endDate on click the same way as we did with startDate
             int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
             int currentMinutes = calendar.get(Calendar.MINUTE);
+            int currentYear = calendar.get(Calendar.YEAR);
+            int currentMonth = calendar.get(Calendar.MONTH) + 1;
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
             TimePickerDialog timePickerDialog = new TimePickerDialog(rootView.getContext(),
                     (view, hourOfDay, minute) -> {
                         StringBuilder sb = new StringBuilder();
+                        if(dateBegin == null){
+                            sb.append(currentYear+":"); sb.append(currentMonth+":"); sb.append(currentDay+" ");
+                        }
+                        else{
+                            sb.append(dateBegin);
+                        }
 
                         if (hourOfDay <= 9){
                             sb.append("0");
