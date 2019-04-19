@@ -3,8 +3,10 @@
  */
 const MongoClient = require("mongodb").MongoClient;
 const express = require("express");
+const session = require("express-session");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const async = require("async");
 const configuration = require("./configuration");
 
@@ -50,15 +52,20 @@ async.auto({
             });
         }],
         router: ["mongodb", function (results, callback) {
+            // cookies parser
+            app.use(cookieParser());
+
             // parse incoming requests
             app.use(bodyParser.urlencoded({ extended: true }));
             app.use(bodyParser.json());
 
-            // Middleware for authentication
-            app.use(function (req, res, next) {
-                // todo: authentication, security
-                return next();
-            });
+            // setup session
+            app.use(session({
+                secret: process.env.SESSION_SECRET,
+                proxy: true,
+                resave: true,
+                saveUninitialized: true
+            }));
 
             // Middleware for registration
             app.use("/register", (require("./routes/register"))(app));
@@ -67,7 +74,7 @@ async.auto({
             app.use("/login", (require("./routes/login"))(app));
 
             // Middleware for status 404
-            app.use(function (req, res, next) {
+            app.use(function (req, res) {
                 res.status(404).format({
                     json: function () {
                         res.jsonp({
@@ -82,7 +89,7 @@ async.auto({
             });
 
             // Middleware for status 500
-            app.use(function (err, req, res, next) {
+            app.use(function (err, req, res) {
                 res.status(500).format({
                     json: function () {
                         res.send({

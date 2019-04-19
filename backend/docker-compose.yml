@@ -27,6 +27,7 @@ services:
     volumes:
       - .:/srv/app:delegated
     environment:
+      - SESSION_SECRET=YM2onwOnkkRDn5gEwbyQxMQuHoPyFrzB
       - NODE_ENV=development
       - DEBUG=mds:*
       - DEBUG_COLORS=yes
