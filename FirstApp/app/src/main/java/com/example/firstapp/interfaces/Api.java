@@ -7,6 +7,7 @@ import com.example.firstapp.responses.AddNoteResponse;
 import com.example.firstapp.responses.EventsResponse;
 import com.example.firstapp.responses.FriendsResponse;
 import com.example.firstapp.responses.LoginResponse;
+import com.example.firstapp.responses.UsersResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -40,4 +41,6 @@ public interface Api {
     @POST("user/profile_photo")
     Call<ResponseBody> uploadPhoto(@Part MultipartBody.Part image);
 
+    @GET("users")
+    Call<UsersResponse> getAllUsers();
 }
