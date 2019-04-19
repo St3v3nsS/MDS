@@ -1,8 +1,10 @@
 /*
  * Environment variables used to configure the server
  */
-const dburl = 'mongodb://mds-mongo:27017';
-const dbName = 'app';
+const dbHost = process.env.DB_HOST || "mds-mongo";
+const dbPort = process.env.DB_PORT || 27017;
+const dbName = process.env.DB_NAME || "app";
+const dburl = 'mongodb://' + dbHost + ":" + dbPort;
 const serverPort = 3000;
 
 /*

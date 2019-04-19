@@ -6,8 +6,10 @@ const dmp = require("util").inspect;
 // import modules
 const express = require("express");
 const Isemail = require("isemail");
+const moment = require("moment");
 const async = require("async");
 const flatten = require("flat");
+const AM = require("../modules/account-manager");
 
 module.exports = function (app) {
     let router = new express.Router();
@@ -115,29 +117,32 @@ module.exports = function (app) {
 
         debug("register: " + dmp(req.body));
         // insert in mongo
-        app.dbs.users.insertOne(
-            // document
-            {
-                "email": req.body.email,
-                "username": req.body.username,
-                "password": req.body.password,
-            },
-            // todo: refactor as a extern function
-            function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                let registerObject = {
-                    "username": req.body.username,
+        AM.saltAndHash(req.body.password, function (hash) {
+            app.dbs.users.insertOne(
+                // document
+                {
                     "email": req.body.email,
-                    "message": "OK"
-                };
+                    "username": req.body.username,
+                    "password": hash,
+                    "date": moment().format('MMMM Do YYYY, h:mm:ss a')
+                },
+                // todo: refactor as a extern function
+                function (err) {
+                    if (err) {
+                        return next(err);
+                    }
 
-                // Succes insertion in db
-                return res.json(registerObject);
-            }
-        );
+                    let registerObject = {
+                        "username": req.body.username,
+                        "email": req.body.email,
+                        "message": "OK"
+                    };
+
+                    // Succes insertion in db
+                    return res.json(registerObject);
+                }
+            );
+        });
     });
 
     return router;

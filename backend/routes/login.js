@@ -1,6 +1,6 @@
 // tools for debugging
 // todo: to be removed when it's in production
-const debug = require("debug")("mds:server:register");
+const debug = require("debug")("mds:server:login");
 const dmp = require("util").inspect;
 
 // import modules
@@ -8,9 +8,25 @@ const express = require("express");
 const Isemail = require("isemail");
 const async = require("async");
 const flatten = require("flat");
+const AM = require("../modules/account-manager");
 
 module.exports = function (app) {
     let router = new express.Router();
+
+    router.use('/', function (req, res, next) {
+        // check if the user has an auto login saved in a cookie
+        if (req.cookies.login === undefined) {
+            next();
+        }
+        else {
+            // attempt automatic login
+            AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {
+                if (results) {
+                    AM.
+                }
+            });
+        }
+    });
 
     // Middleware for checking if username is valid
     router.use(function (req, res, next) {
