@@ -1,10 +1,12 @@
 package com.example.firstapp.menuActivities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,11 +39,12 @@ public class FriendsFragment extends Fragment {
     private ArrayList<Profile> friendsResponse;
     private FriendsAdapter friendsAdapter;
     private Button addFriend;
+    private View rootView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
+        rootView = inflater.inflate(R.layout.fragment_friends, container, false);
         getActivity().setTitle("Friends");
 
 
@@ -52,6 +55,9 @@ public class FriendsFragment extends Fragment {
         friendsList.setAdapter(friendsAdapter);
 
         addFriend = (Button) rootView.findViewById(R.id.add_friend);
+
+        handleButton(container);
+
         Api friendReq = RetrofitClient.createService(Api.class);
         Call<FriendsResponse> call = friendReq.getFriends();
         call.enqueue(new Callback<FriendsResponse>() {
@@ -73,6 +79,15 @@ public class FriendsFragment extends Fragment {
         return rootView;
     }
 
+    private void handleButton(ViewGroup container) {
+
+        addFriend.setOnClickListener(v->{
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new AddFriend()).commit();
+
+        });
+    }
 
 
 }

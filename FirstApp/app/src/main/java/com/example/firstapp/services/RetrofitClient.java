@@ -8,7 +8,7 @@ public class RetrofitClient {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    private static final String API_BASE_URL = "http://172.20.10.3:3000"; //"http://192.168.1.8:3000/";
+    private static final String API_BASE_URL = /*"http://172.20.10.3:3000";*/ "http://192.168.1.8:3000/";
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
