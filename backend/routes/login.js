@@ -28,7 +28,7 @@ module.exports = function (app) {
                             let loginObject = {
                                 "username": results["username"],
                                 "email": results["email"],
-                                "message": "Success"
+                                "message": "success"
                             };
 
                             res.json(loginObject);
@@ -109,11 +109,13 @@ module.exports = function (app) {
                     if (o) {
                         req.session.user = results;
                         if (req.body["remember-me"] === 'false') {
+                            results["message"] = "success";
                             res.json(results);
                         }
                         else {
                             AM.generateLoginKey(app.dbs.users, results["username"], req.ip, function(e, key) {
                                 res.cookie("login", key, { maxAge: 900000 });
+                                results["message"] = "success";
                                 res.json(results);
                             });
                         }
