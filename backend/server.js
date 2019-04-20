@@ -61,7 +61,7 @@ async.auto({
 
             // setup session
             app.use(session({
-                secret: process.env.SESSION_SECRET,
+                secret: configuration.secretSession,
                 proxy: true,
                 resave: true,
                 saveUninitialized: true
@@ -72,6 +72,9 @@ async.auto({
 
             // Middleware for login
             app.use("/login", (require("./routes/login"))(app));
+
+            // Middleware for logout
+            app.use("/logout", (require("./routes/logout"))(app));
 
             // Middleware for status 404
             app.use(function (req, res) {

@@ -7,8 +7,6 @@ const dmp = require("util").inspect;
 const express = require("express");
 const Isemail = require("isemail");
 const moment = require("moment");
-const async = require("async");
-const flatten = require("flat");
 const AM = require("../modules/account-manager");
 
 module.exports = function (app) {
@@ -82,7 +80,7 @@ module.exports = function (app) {
                     return next();
                 }
                 else {
-                    return next("username is already user!");
+                    return next("username is already used!");
                 }
             }
         );
@@ -96,22 +94,6 @@ module.exports = function (app) {
 
         return next();
     });
-
-
-    // Middleware for password confirmation validation
-    /*
-    router.use(function (req, res, next) {
-        if (!req.body.passwordConfirmation) {
-            return next(new Error("no password confirmation"));
-        }
-
-        if (req.body.password !== req.body.passwordConfirmation) {
-            return next(new Error("Passwords are different"));
-        }
-
-        return next();
-    });
-    */
 
     router.post("/", function (req, res, next) {
 
