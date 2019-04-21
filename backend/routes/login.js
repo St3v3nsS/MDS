@@ -114,7 +114,7 @@ module.exports = function (app) {
                         }
                         else {
                             AM.generateLoginKey(app.dbs.users, results["username"], req.ip, function(e, key) {
-                                res.cookie("login", key, { maxAge: 900000 });
+                                res.cookie("login", key, { maxAge: 2147483647 });
                                 results["message"] = "success";
                                 res.json(results);
                             });

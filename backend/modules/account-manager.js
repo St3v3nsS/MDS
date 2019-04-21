@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const moment = require("moment");
 
-const guid = function() {
+const guid = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
             function(c) {
                 let r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;
@@ -10,7 +10,7 @@ const guid = function() {
         );
 };
 
-exports.autoLogin = function(usersCollection, user, pass, callback) {
+exports.autoLogin = function (usersCollection, user, pass, callback) {
     usersCollection.findOne(
             {"username": user},
             function (error, results) {
@@ -89,13 +89,13 @@ exports.generatePasswordKey = function (usersCollection, email, ipAddress, callb
     )
 };
 
-exports.validatePasswordKey = function(usersCollection, passKey, ipAddress, callback) {
+exports.validatePasswordKey = function (usersCollection, passKey, ipAddress, callback) {
     // ensure the passKey maps to the user's last record ip address
     usersCollection.findOne({"passKey": passKey, "ip": ipAddress}, callback);
 };
 
-exports.updatePassword = function(usersCollection, passKey, newPass, callback) {
-    saltAndHash(newPass, function(hash) {
+exports.updatePassword = function (usersCollection, passKey, newPass, callback) {
+    saltAndHash(newPass, function (hash) {
         newPass = hash;
         usersCollection.findOneAndUpdate(
             {"passKey": passKey},
@@ -136,21 +136,21 @@ function generateSalt() {
     return salt;
 }
 
-function md5(str) {
+function md5 (str) {
     return crypto.createHash("md5").update(str).digest("hex");
 }
 
-exports.saltAndHash = function(pass, callback) {
+exports.saltAndHash = function (pass, callback) {
     let salt = generateSalt();
     return callback(salt + md5(pass + salt));
 };
 
-exports.validatePassword = function(plainPass, hashedPass, callback) {
+exports.validatePassword = function (plainPass, hashedPass, callback) {
     let salt = hashedPass.substr(0, 10);
     let validHash = salt + md5(plainPass + salt);
     return callback(null, hashedPass === validHash);
-}
+};
 
-function getObjectId(id) {
+function getObjectId (id) {
     return new require("mongodb").ObjectID(id);
 }
