@@ -2,8 +2,10 @@ package com.example.firstapp.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.Window;
@@ -13,11 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.firstapp.LoginCredentials;
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
-import com.example.firstapp.responses.LoginResponse;
 import com.example.firstapp.models.Profile;
+import com.example.firstapp.responses.LoginResponse;
+import com.example.firstapp.services.LoginCredentials;
 import com.example.firstapp.services.RetrofitClient;
 
 import retrofit2.Call;
@@ -27,12 +29,14 @@ import retrofit2.Response;
 
 public class MainActivity extends Activity {
 
+    public static MainActivity instance;
     Profile profile;
     private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -111,6 +115,19 @@ public class MainActivity extends Activity {
                     dashboard.putExtra("email", response.body().getEmail());
                     MainActivity.this.startActivity(dashboard);
                 }
+                else{
+                    System.out.println(response.code());
+
+                    Activity activity = MainActivity.this;
+                    Toast.makeText(activity, "Resp code wrong", Toast.LENGTH_LONG).show();
+
+                    activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    PreferenceManager.getDefaultSharedPreferences(MainActivity.getContext())
+                            .edit()
+                            .clear()
+                            .apply();
+                }
             }
 
             @Override
@@ -144,5 +161,9 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public static Context getContext(){
+        return instance;
     }
 }

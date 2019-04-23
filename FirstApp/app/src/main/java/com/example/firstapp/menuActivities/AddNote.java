@@ -3,11 +3,13 @@ package com.example.firstapp.menuActivities;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.firstapp.callbacks.AddNoteCallback;
 import com.example.firstapp.R;
@@ -30,8 +33,11 @@ import com.example.firstapp.responses.FriendsResponse;
 import com.example.firstapp.services.RetrofitClient;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,9 +53,12 @@ public class AddNote extends Fragment {
     private Button addNote;
     private TextView startDate;
     private TextView endDate;
+    private String startDateS;
+    private String endDateS;
     private String dateBegin;
 
     private View rootView;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +82,7 @@ public class AddNote extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void getData() {
         final EditText name = (EditText) rootView.findViewById(R.id.add_note_name);
         final Calendar calendar = Calendar.getInstance();
@@ -87,7 +97,11 @@ public class AddNote extends Fragment {
                     (view, hourOfDay, minute) -> {      // onTimeSet function
                         StringBuilder sb = new StringBuilder();
                         if(dateBegin == null){
-                            sb.append(currentYear+":"); sb.append(currentMonth+":"); sb.append(currentDay+" ");
+                            sb.append(currentYear+"-");
+                            if(currentMonth < 10){
+                                sb.append("0");
+                            }
+                            sb.append(currentMonth+"-"); sb.append(currentDay+"T");
                         }
                         else{
                             sb.append(dateBegin);
@@ -98,14 +112,19 @@ public class AddNote extends Fragment {
                         }
 
                         sb.append(hourOfDay);
-                        sb.append(" : ");
+                        sb.append(":");
 
                         if (minute <= 9){
                             sb.append("0");
                         }
                         sb.append(minute);
 
-                        String toShow = sb.toString();
+                        String toShow = sb.replace(sb.indexOf("T"), sb.indexOf("T")+1, " ").toString();
+
+                        sb.append(":");
+                        sb.append(calendar.get(Calendar.SECOND));
+
+                        startDateS = sb.toString();
                         startDate.setText(toShow);  // set the time
                     }, currentHour, currentMinutes, true);
             timePickerDialog.show();
@@ -121,7 +140,11 @@ public class AddNote extends Fragment {
                     (view, hourOfDay, minute) -> {
                         StringBuilder sb = new StringBuilder();
                         if(dateBegin == null){
-                            sb.append(currentYear+":"); sb.append(currentMonth+":"); sb.append(currentDay+" ");
+                            sb.append(currentYear+"-");
+                            if(currentMonth < 10){
+                                sb.append("0");
+                            }
+                            sb.append(currentMonth+"-"); sb.append(currentDay+"T");
                         }
                         else{
                             sb.append(dateBegin);
@@ -132,14 +155,19 @@ public class AddNote extends Fragment {
                         }
 
                         sb.append(hourOfDay);
-                        sb.append(" : ");
+                        sb.append(":");
 
                         if (minute <= 9){
                             sb.append("0");
                         }
                         sb.append(minute);
+                        String toShow = sb.replace(sb.indexOf("T"), sb.indexOf("T")+1, " ").toString();
 
-                        String toShow = sb.toString();
+                        sb.append(":");
+                        sb.append(calendar.get(Calendar.SECOND));
+
+                        endDateS = sb.toString();
+
                         endDate.setText(toShow);
                     }, currentHour, currentMinutes, true);
             timePickerDialog.show();
@@ -152,16 +180,23 @@ public class AddNote extends Fragment {
             @Override
             public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
                 final List<String> friendResponse = new ArrayList<>();
-                final List<Profile> responseParse = response.body().getFriends();       // get the response
+                Context ctx = getContext();
+                FriendsResponse response1 = response.body();
 
-                for( Profile p: responseParse){
-                    friendResponse.add(p.getUsername());    // create the adapter's String list
+                if(response1 == null){
+                    //Toast.makeText(getActivity(), "You have no friends, try to make some!", Toast.LENGTH_LONG).show();
+                    friends.setVisibility(View.INVISIBLE);
+                }else{
+                    friends.setVisibility(View.VISIBLE);
+                    final List<Profile> responseParse = response1.getFriends();       // get the response
+
+                    for( Profile p: responseParse){
+                        friendResponse.add(p.getUsername());    // create the adapter's String list
+                    }
                 }
 
-                Context ctx = getContext();
                 if(ctx != null){
                     ArrayAdapter<String> friendsList = new ArrayAdapter<>(ctx, R.layout.spinner, friendResponse);   // create the adapter
-                    System.out.println(response.body().getFriends());
                     friends.setAdapter(friendsList);    // set the adapter
                     friends.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());   // set string tokenizer
                 }
@@ -188,7 +223,9 @@ public class AddNote extends Fragment {
                 AddNote fragment = (AddNote)
                         getFragmentManager().findFragmentById(R.id.content_frame);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                event = new EventClass(evName, evStartDate, evEndDate, evFriends);
+
+
+                event = new EventClass(evName, startDateS, endDateS, evFriends);
                 getResponse(fragment, new AddNoteCallback(), event, fragmentTransaction);
 
             }
@@ -196,4 +233,13 @@ public class AddNote extends Fragment {
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 }

@@ -10,6 +10,9 @@ public class EventClass {
     private String endDate;
     private List<String> friends;
 
+    public EventClass(String name) {
+        this.name = name;
+    }
 
     public EventClass(String name, String startDate, String endDate, List<String> friends) {
         this.name = name;

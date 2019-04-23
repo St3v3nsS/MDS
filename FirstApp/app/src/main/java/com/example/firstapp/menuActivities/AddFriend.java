@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
@@ -55,13 +56,24 @@ public class AddFriend extends Fragment {
         call.enqueue(new Callback<UsersResponse>() {
             @Override
             public void onResponse(Call<UsersResponse> call, Response<UsersResponse> response) {
-                usersList = response.body().getUsers();
-                System.out.println(usersList);
 
-                usersAdapter.setList(usersList);
-                usersAdapter.notifyDataSetChanged();
+                if(response.code() == 200){
+                    UsersResponse responseUser = response.body();
+                    if (responseUser == null){
+                        Toast.makeText(getContext(), "NO FRIENDS", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        usersList = response.body().getUsers();
+                        System.out.println(usersList);
 
-                fetchUsers();
+                        usersAdapter.setList(usersList);
+                        usersAdapter.notifyDataSetChanged();
+
+                        fetchUsers();
+                    }
+
+                }
+
             }
 
             @Override

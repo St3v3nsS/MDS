@@ -24,7 +24,14 @@ public class ExpandableEveniments {
         Call<EventsResponse> call = retrofitClient.getEvents();
 
         try {
-            List<EventClass> eventClassList = call.execute().body().getEvents();
+            EventsResponse body = call.execute().body();
+
+            if (body == null){
+                eveniments.put("No events yet!", new EventClass("Try add a note"));
+                return eveniments;
+            }
+
+            List<EventClass> eventClassList = body.getEvents();
             for (int i = 0; i < eventClassList.size(); i++) {
                 eveniments.put("Event ~~~~~~~ " + eventClassList.get(i).getName(), eventClassList.get(i));
             }

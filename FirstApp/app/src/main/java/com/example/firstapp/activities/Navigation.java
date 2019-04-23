@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.firstapp.R;
+import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.menuActivities.AddNote;
 import com.example.firstapp.menuActivities.CalendarNextDays;
 import com.example.firstapp.menuActivities.Dashboard;
@@ -30,6 +31,12 @@ import com.example.firstapp.menuActivities.FriendsFragment;
 import com.example.firstapp.menuActivities.NavShare;
 import com.example.firstapp.menuActivities.ProfilePhoto;
 import com.example.firstapp.models.Profile;
+import com.example.firstapp.services.RetrofitClient;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Navigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -175,8 +182,24 @@ public class Navigation extends AppCompatActivity
 
         yes.setOnClickListener(v->{
 
-            Intent intent = new Intent(Navigation.this, MainActivity.class);
-            Navigation.this.startActivity(intent);
+            Api logoutCall = RetrofitClient.createService(Api.class);
+            Call<ResponseBody> call = logoutCall.logout();
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.code() == 200){
+
+                        Intent intent = new Intent(Navigation.this, MainActivity.class);
+                        Navigation.this.startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+
         });
 
     }

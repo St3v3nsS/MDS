@@ -36,4 +36,6 @@
     <string name="yes">Yes</string>
     <string name="add_friend">Add friend</string>
     <string name="add">Add</string>
+    <string name="choose_friend">Choose friend</string>
+    <string name="match_friend">Match Friend</string>
 </resources>

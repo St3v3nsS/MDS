@@ -1,5 +1,6 @@
 package com.example.firstapp.menuActivities;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
@@ -31,11 +33,13 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
     ExpandableListView expandableListView;
     ProgressBar progressBar;
     SwipeRefreshLayout swipeLayout;
+    View rootView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
         getActivity().setTitle("Dashboard");
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.pullToRefresh);
 
@@ -44,6 +48,11 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
             swipeLayout.setOnRefreshListener(this);
         }
 
+
+        expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandableListView);
+        progressBar = rootView.findViewById(R.id.gettingEventsProgressBar);
+        new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView).execute("");
+
         return rootView;
     }
 
@@ -51,11 +60,25 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
-        progressBar = view.findViewById(R.id.gettingEventsProgressBar);
-        new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView).execute("");
+        chooseFriend(view);
 
+    }
 
+    private void chooseFriend(View view) {
+
+        Button chooseAFriend = (Button) rootView.findViewById(R.id.choose_friend);
+
+        chooseAFriend.setOnClickListener(v->{
+
+            ViewGroup viewGroup = view.findViewById(R.id.content_frame);
+            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.matching_friends, viewGroup, false);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setView(dialogView);
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
     }
 
     @Override

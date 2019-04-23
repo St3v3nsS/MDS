@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firstapp.R;
 import com.example.firstapp.SignUpCredentials;
@@ -73,6 +74,7 @@ public class SignUp extends AppCompatActivity {
 
                         profile = new Profile(username, password, email);
 
+                        System.out.println(profile);
                         progressBar = (ProgressBar) findViewById(R.id.sign_progressBar);
                         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -107,6 +109,16 @@ public class SignUp extends AppCompatActivity {
                     Intent login = new Intent(SignUp.this, MainActivity.class);
                     SignUp.this.startActivity(login);
                 }
+
+                else{
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(SignUp.this);
+                    alertBuilder.setMessage("EMAIL/USERNAME ALREADY IN USE!");
+                    AlertDialog alertDialog = alertBuilder.create();
+                    alertDialog.show();
+
+                    Activity activity = SignUp.this;
+                    activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
             }
 
             @Override
@@ -117,12 +129,9 @@ public class SignUp extends AppCompatActivity {
                 }
 
                 responseCall.cancel();
+                Toast.makeText(SignUp.this, "Signup failed", Toast.LENGTH_LONG).show();
 
                 t.printStackTrace();
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(SignUp.this);
-                alertBuilder.setMessage("EMAIL/USERNAME ALREADY IN USE!");
-                AlertDialog alertDialog = alertBuilder.create();
-                alertDialog.show();
 
                 Activity activity = SignUp.this;
                 activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
