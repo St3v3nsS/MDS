@@ -43,9 +43,8 @@ async.auto({
 
                 // Ensure index on collections elements
                 app.dbs.users.createIndex({"username": 1}, {"background": true});
-                // todo: to be added when we decide how to index the events collection
-                // app.dbs.events.createIndex({"events"})
-
+                app.dbs.events.createIndex({"name": 1}, {"background": true});
+                app.dbs.events.createIndex({"endDate": 1}, {"background": true, "expireAfterSeconds": 0});
                 // todo: to be removed
                 console.log("Connected successfully to db");
                 return callback(null, "Connected successfully to db");
@@ -61,7 +60,7 @@ async.auto({
 
             // setup session
             app.use(session({
-                secret: process.env.SESSION_SECRET,
+                secret: configuration.secretSession,
                 proxy: true,
                 resave: true,
                 saveUninitialized: true
@@ -72,6 +71,12 @@ async.auto({
 
             // Middleware for login
             app.use("/login", (require("./routes/login"))(app));
+
+            // Middleware for logout
+            app.use("/logout", (require("./routes/logout"))(app));
+
+            // Middleware for register
+            app.use("/events", (require("./routes/events"))(app));
 
             // Middleware for status 404
             app.use(function (req, res) {

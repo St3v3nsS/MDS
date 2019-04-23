@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const moment = require("moment");
 
-const guid = function() {
+const guid = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
             function(c) {
                 let r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;
@@ -10,12 +10,17 @@ const guid = function() {
         );
 };
 
-exports.autoLogin = function (usersCollection, user, pass, callback) {\
+exports.autoLogin = function (usersCollection, user, pass, callback) {
     usersCollection.findOne(
-            {"user": user},
-            function (error, result) {
-                if (result) {
-                    result.pass === pass ? callback(result) : callback(null);
+            {"username": user},
+            function (error, results) {
+                if (results) {
+                    if (results["password"] === pass) {
+                        return callback(null, results);
+                    }
+                    else {
+                        return callback(new Error("wrong password"));
+                    }
                 } else {
                     return callback(null);
                 }
@@ -52,7 +57,7 @@ exports.generateLoginKey = function (usersCollection, user, ipAdress, callback) 
 
 exports.validateLoginKey = function (usersCollection, cookie, ipAddress, callback) {
     // ensure the cookie maps to the user's last recorded ip address
-    usersCollection.findOne({"cookie": cookie, "ipAddress": ipAddress}, callback);
+    usersCollection.findOne({"cookie": cookie, "ip": ipAddress}, callback);
 };
 
 exports.generatePasswordKey = function (usersCollection, email, ipAddress, callback) {
@@ -90,7 +95,7 @@ exports.validatePasswordKey = function (usersCollection, passKey, ipAddress, cal
 };
 
 exports.updatePassword = function (usersCollection, passKey, newPass, callback) {
-    saltAndHash(newPass, function(hash) {
+    saltAndHash(newPass, function (hash) {
         newPass = hash;
         usersCollection.findOneAndUpdate(
             {"passKey": passKey},
@@ -131,21 +136,21 @@ function generateSalt() {
     return salt;
 }
 
-function md5(str) {
+function md5 (str) {
     return crypto.createHash("md5").update(str).digest("hex");
 }
 
 exports.saltAndHash = function (pass, callback) {
     let salt = generateSalt();
     return callback(salt + md5(pass + salt));
-}
+};
 
-function validatePassword(plainPass, hashedPass, callback) {
+exports.validatePassword = function (plainPass, hashedPass, callback) {
     let salt = hashedPass.substr(0, 10);
     let validHash = salt + md5(plainPass + salt);
     return callback(null, hashedPass === validHash);
-}
+};
 
-function getObjectId(id) {
+function getObjectId (id) {
     return new require("mongodb").ObjectID(id);
 }

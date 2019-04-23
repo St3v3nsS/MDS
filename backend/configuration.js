@@ -1,15 +1,19 @@
 /*
  * Environment variables used to configure the server
  */
-const dbHost = process.env.DB_HOST || "mds-mongo";
+const dbHost = process.env.DB_HOST || "localhost";
 const dbPort = process.env.DB_PORT || 27017;
 const dbName = process.env.DB_NAME || "app";
-const dburl = 'mongodb://' + dbHost + ":" + dbPort;
-const serverPort = 3000;
+const dburl = "mongodb://" + dbHost + ":" + dbPort;
+const serverPort = process.env.PORT || 3000;
 
 /*
  * Export environment variables to be used in server.js
  */
-module.exports.dburl = dburl;
-module.exports.dbName = dbName;
-module.exports.serverPort = serverPort;
+exports.dburl = dburl;
+exports.dbName = dbName;
+exports.serverPort = serverPort;
+exports.secretSession = process.env.SESSION_SECRET || "YM2onwOnkkRDn5gEwbyQxMQuHoPyFrzB";
+
+let date = new Date();
+console.log(date.toISOString());
