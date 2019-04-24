@@ -1,6 +1,7 @@
 package com.example.firstapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +43,9 @@ public class Navigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Profile profile;
+    private static final String DETAILS = "details";
+    private static final String USER = "user";
+    private static final String DESC = "describe";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +94,19 @@ public class Navigation extends AppCompatActivity
         String email = getIntent().getStringExtra("email");
 
         profile = new Profile(username, password, email);
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences(DETAILS, MODE_PRIVATE);
+        String user = sharedPreferences.getString(USER, null);
+        if (user == null || !user.equals(username)){
+            sharedPreferences.edit()
+                    .putString(USER, username)
+                    .apply();
+
+            sharedPreferences.edit()
+                    .putString(DESC, email)
+                    .apply();
+        }
     }
 
     @Override
@@ -189,7 +206,7 @@ public class Navigation extends AppCompatActivity
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.code() == 200){
 
-                        Intent intent = new Intent(Navigation.this, MainActivity.class);
+                        Intent intent = new Intent(Navigation.this, LoginActivity.class);
                         Navigation.this.startActivity(intent);
                     }
                 }

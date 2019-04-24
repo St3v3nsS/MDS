@@ -1,6 +1,8 @@
 package com.example.firstapp.menuActivities;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
+import com.example.firstapp.activities.MainActivity;
 import com.example.firstapp.models.EventClass;
 import com.example.firstapp.models.ExpandableEveniments;
 import com.example.firstapp.services.CustomExpandableListAdapter;
@@ -47,7 +50,6 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
             System.out.println("OK");
             swipeLayout.setOnRefreshListener(this);
         }
-
 
         expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandableListView);
         progressBar = rootView.findViewById(R.id.gettingEventsProgressBar);

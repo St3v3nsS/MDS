@@ -46,6 +46,7 @@ public class Profile implements Serializable {
         return "Profile{" +
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", pass='" + password + '\'' +
                 '}';
     }
 }

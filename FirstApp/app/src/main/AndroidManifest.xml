@@ -18,6 +18,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activities.SignUp" />
+        <activity android:name=".activities.LoginActivity"/>
         <activity
             android:name=".activities.Navigation"
             android:label="@string/title_activity_navigation"

@@ -63,7 +63,7 @@ public class AddFriend extends Fragment {
                         Toast.makeText(getContext(), "NO FRIENDS", Toast.LENGTH_LONG).show();
                     }
                     else{
-                        usersList = response.body().getUsers();
+                        usersList = responseUser.getUsers();
                         System.out.println(usersList);
 
                         usersAdapter.setList(usersList);

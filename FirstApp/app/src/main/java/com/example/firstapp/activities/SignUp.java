@@ -49,7 +49,7 @@ public class SignUp extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent mainActivity = new Intent(SignUp.this, MainActivity.class);
+                        Intent mainActivity = new Intent(SignUp.this, LoginActivity.class);
                         SignUp.this.startActivity(mainActivity);
                     }
                 }
@@ -67,7 +67,7 @@ public class SignUp extends AppCompatActivity {
 
                         EditText uname = (EditText) findViewById(R.id.sign_username);
                         EditText signEmail = (EditText) findViewById(R.id.sign_email);
-                        EditText psw = (EditText) findViewById(R.id.sign_email);
+                        EditText psw = (EditText) findViewById(R.id.sign_password);
                         String username = uname.getText().toString();
                         String email = signEmail.getText().toString();
                         String password = psw.getText().toString();
@@ -106,7 +106,7 @@ public class SignUp extends AppCompatActivity {
                     alertDialog.show();
 
 
-                    Intent login = new Intent(SignUp.this, MainActivity.class);
+                    Intent login = new Intent(SignUp.this, LoginActivity.class);
                     SignUp.this.startActivity(login);
                 }
 

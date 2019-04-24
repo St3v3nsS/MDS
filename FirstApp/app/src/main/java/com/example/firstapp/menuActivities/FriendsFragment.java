@@ -63,11 +63,18 @@ public class FriendsFragment extends Fragment {
         call.enqueue(new Callback<FriendsResponse>() {
             @Override
             public void onResponse(Call<FriendsResponse> call, Response<FriendsResponse> response) {
-                System.out.println(response.code());
-                friendsResponse = response.body().getFriends();
-                friendsAdapter.setList(friendsResponse);
-                friendsAdapter.notifyDataSetChanged();
-                System.out.println(friendsResponse);
+
+                FriendsResponse friendsResponse1 = response.body();
+                if(friendsResponse1 != null){
+                    friendsResponse = friendsResponse1.getFriends();
+                    friendsAdapter.setList(friendsResponse);
+                    friendsAdapter.notifyDataSetChanged();
+                    System.out.println(friendsResponse);
+                }
+                else{
+                    Toast.makeText(getContext(), "No friend, add one!", Toast.LENGTH_LONG).show();
+                }
+
             }
 
             @Override
