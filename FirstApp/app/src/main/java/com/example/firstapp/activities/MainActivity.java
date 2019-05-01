@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(PREF_COOKIE, MODE_PRIVATE);
         Set<String> cookies = preferences.getStringSet(HAS_COOKIE, new HashSet<>());
-
+        String user  = getSharedPreferences(DETAILS, MODE_PRIVATE).getString(USER, null);
         Thread timer = new Thread(){
             @Override
             public void run() {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }finally {
                     System.out.println(cookies);
-                    if(cookies != null && cookies.isEmpty()){
+                    if(cookies != null && cookies.size() < 2 && user == null){
 
                             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                             MainActivity.this.startActivity(intent);

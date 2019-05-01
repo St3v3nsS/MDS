@@ -43,6 +43,8 @@ public class Navigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Profile profile;
+    private static final String PREF_COOKIE = "cookies";
+    private static final String HAS_COOKIE = "has cookie";
     private static final String DETAILS = "details";
     private static final String USER = "user";
     private static final String DESC = "describe";
@@ -199,12 +201,33 @@ public class Navigation extends AppCompatActivity
 
         yes.setOnClickListener(v->{
 
+            Intent intent = new Intent(Navigation.this, LoginActivity.class);
+            Navigation.this.startActivity(intent);
+
             Api logoutCall = RetrofitClient.createService(Api.class);
             Call<ResponseBody> call = logoutCall.logout();
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    System.out.println(response.code());
+
                     if (response.code() == 200){
+
+
+                        /*SharedPreferences sharedPreferences = getSharedPreferences(PREF_COOKIE, MODE_PRIVATE);
+                        sharedPreferences
+                                .edit()
+                                .clear()
+                                .apply();
+
+                        sharedPreferences = getSharedPreferences(DETAILS, MODE_PRIVATE);
+                        sharedPreferences
+                                .edit()
+                                .clear()
+                                .apply();
+
+                        System.out.println(sharedPreferences.getString(USER, null));
+                        System.out.println(sharedPreferences.getString(DESC, null));*/
 
                         Intent intent = new Intent(Navigation.this, LoginActivity.class);
                         Navigation.this.startActivity(intent);

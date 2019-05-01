@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:fontFamily="@font/lionteen"
-        android:textSize="30sp"
+        android:textSize="40sp"
+        android:textColor="#FFFFFF"
         android:text="@string/asched" />
 
     <ProgressBar

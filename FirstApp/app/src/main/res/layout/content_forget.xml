@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/email_forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="#FFFF"
+        android:textSize="20sp"
+        android:drawableLeft="@drawable/ic_action_email"
+        android:hint="@string/please_enter_the_email"
+        android:inputType="textEmailAddress" />
+
+    <Button
+        android:id="@+id/send_token"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColor="#FFFF"
+        android:padding="5dp"
+        android:background="@drawable/button_login"
+        android:text="@string/send" />
+
+    <TextView
+        android:id="@+id/check_email_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:text="@string/check_your_email_for_code"
+        android:visibility="invisible"/>
+
+</LinearLayout>

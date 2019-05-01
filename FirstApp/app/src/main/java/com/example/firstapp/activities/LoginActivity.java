@@ -42,6 +42,17 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_main);
         onLoginClick();
         onSignupClick();
+        onForgotClick();
+
+    }
+
+    private void onForgotClick() {
+        TextView forgot = (TextView) findViewById(R.id.forgot_pass);
+
+        forgot.setOnClickListener(v->{
+            Intent forgotIntent = new Intent(this, ForgotPassword.class);
+            this.startActivity(forgotIntent);
+        });
 
     }
 
@@ -122,11 +133,6 @@ public class LoginActivity extends Activity {
 
                     activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-                    SharedPreferences preferences = MainActivity.getContext().getSharedPreferences("cookies", MODE_PRIVATE);
-                    preferences
-                            .edit()
-                            .clear()
-                            .apply();
                 }
             }
 

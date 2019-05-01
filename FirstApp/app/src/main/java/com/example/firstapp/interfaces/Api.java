@@ -2,6 +2,8 @@ package com.example.firstapp.interfaces;
 
 import com.example.firstapp.SignUpCredentials;
 import com.example.firstapp.models.EventClass;
+import com.example.firstapp.models.ResetPassword;
+import com.example.firstapp.models.StringBody;
 import com.example.firstapp.responses.AddNoteResponse;
 import com.example.firstapp.responses.EventsResponse;
 import com.example.firstapp.responses.FriendsResponse;
@@ -67,6 +69,14 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
+    @PATCH("user/friends/{name}")
+    Call<ResponseBody> addFriend(@Path("name") String name);
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
     @Multipart
     @POST("user/profile_photo")
     Call<ResponseBody> uploadPhoto(@Part MultipartBody.Part image);
@@ -78,6 +88,31 @@ public interface Api {
     })
     @GET("users")
     Call<UsersResponse> getAllUsers();
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @POST("forgot_password")
+    Call<AddNoteResponse> forgotPassword(@Body StringBody email);
+
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @POST("check_reset_token")
+    Call<AddNoteResponse> checkResetToken(@Body StringBody token);
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @POST("new_password")
+    Call<AddNoteResponse> newPassword(@Body ResetPassword password);
 
     @Headers({
             "key: Content-Type",

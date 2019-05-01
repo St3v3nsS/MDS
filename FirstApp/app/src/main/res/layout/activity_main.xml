@@ -29,7 +29,7 @@
         android:hint="Username"
         android:inputType="textPersonName"
         android:textSize="16dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="30dp"
         android:layout_above="@+id/password"
         android:layout_centerHorizontal="true" />
 
@@ -42,7 +42,7 @@
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        android:layout_marginBottom="130dp"
+        android:layout_marginBottom="100dp"
         android:layout_alignBottom="@+id/cardView"
         android:layout_alignLeft="@+id/username"
         android:layout_alignStart="@+id/username" />
@@ -54,7 +54,7 @@
         app:cardCornerRadius="25dp"
         app:cardElevation="10dp"
         android:id="@+id/cardView"
-        android:layout_marginBottom="31dp"
+        android:layout_marginBottom="60dp"
         android:layout_above="@+id/register"
         android:layout_centerHorizontal="true">
 
@@ -74,13 +74,26 @@
     </android.support.v7.widget.CardView>
 
     <TextView
+        android:id="@+id/forgot_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/register"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:padding="2dp"
+        android:textSize="15sp"
+        android:text="@string/forgot_password" />
+
+    <TextView
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register_here"
         android:layout_above="@+id/linearLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="6dp" />
+        android:layout_marginBottom="6dp"
+        android:padding="2dp"
+        android:textSize="15sp"
+        android:text="@string/register_here" />
 
     <LinearLayout
         android:layout_width="wrap_content"

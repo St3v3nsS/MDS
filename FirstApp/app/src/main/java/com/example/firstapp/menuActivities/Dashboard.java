@@ -44,7 +44,7 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
         rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         getActivity().setTitle("Dashboard");
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.pullToRefresh);
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.pullToRefresh); // add refresh on swipe down
 
         if(swipeLayout != null) {
             System.out.println("OK");
@@ -68,23 +68,18 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
 
     private void chooseFriend(View view) {
 
-        Button chooseAFriend = (Button) rootView.findViewById(R.id.choose_friend);
+        Button chooseAFriend = (Button) rootView.findViewById(R.id.choose_friend); // get the choose friend button
 
-        chooseAFriend.setOnClickListener(v->{
+        chooseAFriend.setOnClickListener(v->{ // add listener for on click
 
-            ViewGroup viewGroup = view.findViewById(R.id.content_frame);
-            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.matching_friends, viewGroup, false);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setView(dialogView);
-
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+            FragmentManager manager = getFragmentManager();
+            MatchingFriends dialog = new MatchingFriends();
+            dialog.show(manager, "AlertDialog");
         });
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh() { // reload the events
         Toast.makeText(getActivity(),"Refresh", Toast.LENGTH_LONG).show();
         new Handler().postDelayed(new Runnable() {
             @Override

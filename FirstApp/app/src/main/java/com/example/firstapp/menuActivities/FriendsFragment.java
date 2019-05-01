@@ -23,6 +23,7 @@ import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.Profile;
 import com.example.firstapp.responses.FriendsResponse;
 import com.example.firstapp.services.FriendsAdapter;
+import com.example.firstapp.services.LineDivider;
 import com.example.firstapp.services.RetrofitClient;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class FriendsFragment extends Fragment {
         friendsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         friendsAdapter = new FriendsAdapter(friendsResponse);
+        friendsList.addItemDecoration(new LineDivider(getContext()));
         friendsList.setAdapter(friendsAdapter);
 
         addFriend = (Button) rootView.findViewById(R.id.add_friend);
@@ -86,6 +88,7 @@ public class FriendsFragment extends Fragment {
         return rootView;
     }
 
+    // handle the add friend button
     private void handleButton(ViewGroup container) {
 
         addFriend.setOnClickListener(v->{
