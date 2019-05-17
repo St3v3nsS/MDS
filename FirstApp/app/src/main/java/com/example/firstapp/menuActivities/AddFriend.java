@@ -30,6 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddFriend extends Fragment {
+    // This class is used for adding a new friend from a list of users
 
     private View rootView;
     private RecyclerView users;
@@ -75,7 +76,7 @@ public class AddFriend extends Fragment {
                     }
 
                 }else{  // if error
-                    Toast.makeText(getContext(), "Server error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -83,6 +84,8 @@ public class AddFriend extends Fragment {
             @Override
             public void onFailure(Call<UsersResponse> call, Throwable t) {
                 call.cancel(); // cancel the call on no response
+                Toast.makeText(getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+
             }
         });
 

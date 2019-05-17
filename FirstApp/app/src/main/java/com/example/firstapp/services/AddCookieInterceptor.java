@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class AddCookieInterceptor implements Interceptor {
-
+    // This class handles the interception of cookies using retrofit
     private static final String PREF_COOKIE = "cookies";
     private static final String HAS_COOKIE = "has cookie";
 

@@ -3,6 +3,7 @@ package com.example.firstapp.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
@@ -68,7 +70,7 @@ public class Navigation extends AppCompatActivity
 
         getProfile();
 
-
+        // draw the navigation
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -91,6 +93,7 @@ public class Navigation extends AppCompatActivity
     }
 
     private void getProfile() {
+        // getting the data for profile show
         String username = getIntent().getStringExtra("username");
         String password = getIntent().getStringExtra("password");
         String email = getIntent().getStringExtra("email");
@@ -136,8 +139,9 @@ public class Navigation extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // get the user to the settings menu, come back in app by pressing 'BACK'
         if (id == R.id.action_settings) {
+            startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
             return true;
         }
 
@@ -154,20 +158,22 @@ public class Navigation extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard){
-            fragment = new Dashboard();
+            fragment = new Dashboard(); // --> dashboard screen
         }else if (id == R.id.nav_add_profile_photo) {
-            fragment = new ProfilePhoto();
+            fragment = new ProfilePhoto(); // --> Add profile photo screen
         } else if (id == R.id.nav_add_note) {
-            fragment = new AddNote();
+            fragment = new AddNote();   // --> Add event screen
         } else if (id == R.id.nav_next_days) {
-            fragment = new CalendarNextDays();
+            fragment = new CalendarNextDays(); // --> calendar screen
         } else if (id == R.id.nav_friends){
-            fragment = new FriendsFragment();
+            fragment = new FriendsFragment(); // --> friends screen
         } else if (id == R.id.nav_logout) {
-            logout();
+            logout(); // --> logout dialog
         } else if (id == R.id.nav_share) {
-            fragment = new NavShare();
+            fragment = new NavShare(); // --> share this app
         }
+
+        // create the view and draw
 
         if(fragment != null){
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -183,6 +189,7 @@ public class Navigation extends AppCompatActivity
     }
 
     private void logout() {
+        // handle the logout alert dialog
         ViewGroup viewGroup = findViewById(R.id.content_frame);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.logout_dialog, viewGroup, false);
 
@@ -192,17 +199,15 @@ public class Navigation extends AppCompatActivity
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
-        Button yes = (Button) dialogView.findViewById(R.id.yes);
+        Button cancel = (Button) dialogView.findViewById(R.id.cancel); // cancel button
+        Button yes = (Button) dialogView.findViewById(R.id.yes); // yes button
 
         cancel.setOnClickListener(v->{
             dialog.dismiss();
         });
 
         yes.setOnClickListener(v->{
-
-            Intent intent = new Intent(Navigation.this, LoginActivity.class);
-            Navigation.this.startActivity(intent);
+            // make an api call to delete the cookies from server
 
             Api logoutCall = RetrofitClient.createService(Api.class);
             Call<ResponseBody> call = logoutCall.logout();
@@ -212,9 +217,9 @@ public class Navigation extends AppCompatActivity
                     System.out.println(response.code());
 
                     if (response.code() == 200){
+                        // delete the user from shared preferences
 
-
-                        /*SharedPreferences sharedPreferences = getSharedPreferences(PREF_COOKIE, MODE_PRIVATE);
+                        SharedPreferences sharedPreferences = getSharedPreferences(PREF_COOKIE, MODE_PRIVATE);
                         sharedPreferences
                                 .edit()
                                 .clear()
@@ -227,16 +232,22 @@ public class Navigation extends AppCompatActivity
                                 .apply();
 
                         System.out.println(sharedPreferences.getString(USER, null));
-                        System.out.println(sharedPreferences.getString(DESC, null));*/
+                        System.out.println(sharedPreferences.getString(DESC, null));
 
+                        // start the Login screen
                         Intent intent = new Intent(Navigation.this, LoginActivity.class);
                         Navigation.this.startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(Navigation.this, "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     call.cancel();
+                    Toast.makeText(Navigation.this, "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+
                 }
             });
 

@@ -42,7 +42,7 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfilePhoto extends Fragment {
-
+    // This class handles the profile photo changing by requesting either the camera of the files
     View rootView;
     ImageView imageView;
     Integer REQUEST_CAMERA=1, SELECT_FILE=0;
@@ -69,7 +69,7 @@ public class ProfilePhoto extends Fragment {
     }
 
     private void selectImage(){
-
+        // handle the selection
         final CharSequence[] options = {"Camera", "Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -78,10 +78,12 @@ public class ProfilePhoto extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(options[which].equals("Camera")){
+                    // if the camera is chosen, start making photo
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, REQUEST_CAMERA);
                 }
                 else if(options[which].equals("Gallery")){
+                    // go to stored photos and choose one
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(intent.createChooser(intent, "Select File"), SELECT_FILE);
@@ -100,9 +102,8 @@ public class ProfilePhoto extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (resultCode == RESULT_OK){
-
+            // if the photo was selected --> add it in the spot available then upload it to the server
             final Bitmap bitmap;
             if(requestCode == REQUEST_CAMERA){
 
@@ -136,7 +137,7 @@ public class ProfilePhoto extends Fragment {
     private void uploadImage(Bitmap bitmap) {
         cardView.setOnClickListener(v -> {
             String filename = "currentImageToUpload";
-
+            // uploading the photo by sending a multipart call to the server
             File f = new File(getContext().getCacheDir(), filename);
             try {
 
@@ -164,12 +165,14 @@ public class ProfilePhoto extends Fragment {
                             imageView.setImageDrawable(getActivity().getDrawable(R.drawable.avatar));
                             cardView.setVisibility(View.INVISIBLE);
 
+                        }else {
+                            Toast.makeText(getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        System.out.println("ended here!");
                         call.cancel();
 
                     }

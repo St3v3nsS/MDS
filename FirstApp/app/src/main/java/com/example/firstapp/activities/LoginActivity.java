@@ -29,6 +29,8 @@ import retrofit2.Response;
 
 
 public class LoginActivity extends Activity {
+    // This class handles the Login Activity by checking the credentials or navigating through
+    // sign up or forgot password
 
     Profile profile;
     private ProgressBar progressBar;
@@ -36,17 +38,24 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Setting the full screen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        onLoginClick();
-        onSignupClick();
-        onForgotClick();
+
+        // Handle the clicks
+        onLoginClick(); // login button -- > Check credentials
+        onSignupClick(); // signup button ---> new Activity ( Signup)
+        onForgotClick();  // forgot password text --> new Activity
 
     }
 
     private void onForgotClick() {
+
+        // this creates a new instance of ForgotPassword
+
         TextView forgot = (TextView) findViewById(R.id.forgot_pass);
 
         forgot.setOnClickListener(v->{
@@ -57,6 +66,8 @@ public class LoginActivity extends Activity {
     }
 
     private void onSignupClick() {
+
+        // this creates a new instance of SignUp
 
         TextView signup = (TextView) findViewById(R.id.register);
         signup.setOnClickListener(
@@ -73,7 +84,7 @@ public class LoginActivity extends Activity {
     public void onLoginClick() {
 
         CardView cardView = (CardView)findViewById(R.id.cardView);
-        cardView.setOnClickListener(
+        cardView.setOnClickListener(    // getting the Login Button
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -90,7 +101,6 @@ public class LoginActivity extends Activity {
                         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); //  Block user Interaction
 
                         //  check login Credentials
-
                         checkLogin(profile);
 
                     }
@@ -102,6 +112,7 @@ public class LoginActivity extends Activity {
     }
 
     protected void checkLogin(final Profile profile){
+        // Making an API call to the server
 
         Api loginClient = RetrofitClient.createService(Api.class);
         Call<LoginResponse> call = loginClient.loginWithCredentials(new LoginCredentials(profile.getUsername(), profile.getPassword()));
@@ -111,6 +122,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
+                // hide the progress bar
                 if (progressBar.isShown()){
                     progressBar.setVisibility(View.INVISIBLE);
                 }
@@ -118,7 +130,7 @@ public class LoginActivity extends Activity {
                 if(response.code() == 200){
                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
 
-
+                    // Creating the Navigation View with the user details
                     Intent dashboard = new Intent(LoginActivity.this, Navigation.class);
                     dashboard.putExtra("username", profile.getUsername());
                     dashboard.putExtra("password", profile.getPassword());
@@ -127,9 +139,9 @@ public class LoginActivity extends Activity {
                 }
                 else{
                     System.out.println(response.code());
-
+                    // retry
                     Activity activity = LoginActivity.this;
-                    Toast.makeText(activity, "Resp code wrong", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Something went wrong. Please try again", Toast.LENGTH_LONG).show();
 
                     activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
@@ -143,8 +155,8 @@ public class LoginActivity extends Activity {
                     progressBar.setVisibility(View.INVISIBLE);
                 }
 
+                // make an alert Dialog for a failed login
                 call.cancel();
-
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
                 alertDialog.setMessage("Login failed!");
 

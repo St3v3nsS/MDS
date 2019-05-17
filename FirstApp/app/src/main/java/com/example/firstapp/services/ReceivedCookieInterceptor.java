@@ -17,6 +17,8 @@ import okhttp3.Response;
 
 
 public class ReceivedCookieInterceptor implements Interceptor {
+    // adding the cookies in the shared preferences
+
     private static final String PREF_COOKIE = "cookies";
     private static final String HAS_COOKIE = "has cookie";
 

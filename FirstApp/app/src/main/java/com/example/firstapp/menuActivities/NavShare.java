@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.example.firstapp.R;
 
 public class NavShare extends android.support.v4.app.Fragment {
-
+    // This class handles the Share Button by creating an Chooser for apps to share the message
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

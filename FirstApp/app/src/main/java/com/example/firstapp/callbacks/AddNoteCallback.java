@@ -9,9 +9,8 @@ import com.example.firstapp.R;
 import com.example.firstapp.menuActivities.AddNote;
 
 public class AddNoteCallback {
-
+    // this class is a used as a Callback for adding a new event --> attaching the addNote fragment
     public void onResponse(AddNote addNote, FragmentTransaction fragmentTransaction) {
-        System.out.println("IN callback");
         fragmentTransaction
                 .setReorderingAllowed(false)
                 .detach(addNote)

@@ -35,6 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MatchingFriends extends DialogFragment {
+    // This class handles the matching problem, syncing the user events with his friend events
 
     View rootView;
     Button matchFriend;
@@ -48,7 +49,6 @@ public class MatchingFriends extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
 
         rootView = LayoutInflater.from(getContext()).inflate(R.layout.matching_friends, null, false);
-
         friendsList = (RecyclerView) rootView.findViewById(R.id.friends_view);
 
         friendsList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,7 +65,7 @@ public class MatchingFriends extends DialogFragment {
                 .create();
     }
 
-    private void getMatch() {
+    private void getMatch() { // handle the match button
         Button match = rootView.findViewById(R.id.match_friend);
 
         match.setOnClickListener(v->{
@@ -79,7 +79,7 @@ public class MatchingFriends extends DialogFragment {
 
 
     private void getFriends() {
-
+        // api call to get the friends
 
         Api friendsApi = RetrofitClient.createService(Api.class);
         Call<FriendsResponse> call = friendsApi.getFriends();
@@ -89,6 +89,7 @@ public class MatchingFriends extends DialogFragment {
                 if (response.code() == 200){
                     FriendsResponse friends = response.body();
                     if (friends != null){
+                        // fill the recycler with data
                         friendsResponse = friends.getFriends();
                         friendsAdapter.setList(friendsResponse);
                         friendsAdapter.notifyDataSetChanged();

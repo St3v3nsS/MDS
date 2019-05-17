@@ -38,6 +38,7 @@ import retrofit2.Response;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
                         implements Filterable {
+    // this class handles the show of all the user and the search button for filtering them
     private List<Profile> users;
     private List<Profile> usersFiltered;
     private RecyclerView.ViewHolder viewHolder;
@@ -162,7 +163,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
                         .setVibrate(new long[] { 1000, 1000 })
                         .setSound(Uri.parse(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI))
                         .setContentTitle("Friend Request")
-                        .setContentText(username + " wants to add you as a friend")
+                        .setContentText(username + " accepted your friend request!")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                         .setContentIntent(contentIntent)

@@ -6,15 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firstapp.R;
+import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.EventClass;
 
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
+    // This class is used for the expandable list from dashboard which contains the events
 
     private Context context;
     private List<String> expandableListTitles;
@@ -59,6 +68,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.listTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
+
         return convertView;
     }
 
@@ -73,6 +83,28 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.expandedListItem);
         expandedListTextView.setText(expandedListText.toString());
+
+        Button deleteEvent = (Button) convertView.findViewById(R.id.delete_event);
+        deleteEvent.setOnClickListener(ev->{
+            Api api = RetrofitClient.createService(Api.class);
+            Call<ResponseBody> call = api.deleteEvent(expandedListText.getName());
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.code() == 200){
+                        Toast.makeText(context, "Successfully deleted", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(context, "Some error occured. Please try again later!", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(context, "Some error occured. Please try again later!", Toast.LENGTH_LONG).show();
+                    call.cancel();
+                }
+            });
+        });
         return convertView;
     }
 

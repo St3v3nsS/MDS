@@ -47,7 +47,6 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.pullToRefresh); // add refresh on swipe down
 
         if(swipeLayout != null) {
-            System.out.println("OK");
             swipeLayout.setOnRefreshListener(this);
         }
 

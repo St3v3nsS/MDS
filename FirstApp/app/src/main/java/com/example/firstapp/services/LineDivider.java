@@ -10,6 +10,8 @@ import android.view.View;
 import com.example.firstapp.R;
 
 public class LineDivider extends RecyclerView.ItemDecoration {
+    // this separate each user by drawing a line between them
+
     private Drawable mDivider;
 
     public LineDivider(Context context) {

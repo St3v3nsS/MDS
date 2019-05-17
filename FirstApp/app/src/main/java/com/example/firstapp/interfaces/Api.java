@@ -15,6 +15,7 @@ import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -24,6 +25,7 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface Api {
+    // This is the API interface which makes calls to the server
     @Headers({
             "key: Content-Type",
             "value: application/json",
@@ -61,6 +63,14 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
+    @DELETE("user/events/{name}")
+    Call<ResponseBody> deleteEvent(@Path("name") String name);
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
     @GET("user/friends")
     Call<FriendsResponse> getFriends();
 
@@ -71,6 +81,14 @@ public interface Api {
     })
     @PATCH("user/friends/{name}")
     Call<ResponseBody> addFriend(@Path("name") String name);
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @DELETE("user/friends/{name}")
+    Call<ResponseBody> deleteFriend(@Path("name") String name);
 
     @Headers({
             "key: Content-Type",
@@ -121,4 +139,6 @@ public interface Api {
     })
     @POST("logout")
     Call<ResponseBody> logout();
+
+
 }

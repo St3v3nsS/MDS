@@ -6,9 +6,12 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.firstapp.R;
+import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.Profile;
 
 
@@ -19,8 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
+    // This class is used for showing the friends with all their information in the recycler view
     private List<Profile> friends;
     static Map<Integer, View> views = new HashMap<>();
 
@@ -61,6 +69,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         });
         viewHolder.setStatus(friends.get(i).getEmail());
         viewHolder.setUsername(friends.get(i).getUsername());
+        viewHolder.onButtonClick(friends.get(i));
     }
 
 
@@ -110,6 +119,32 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             TextView friendUsername = (TextView) mView.findViewById(R.id.user_name);
 
             return friendUsername.getText().toString();
+        }
+
+        public void onButtonClick(Profile profile) {
+            Button delete = (Button) mView.findViewById(R.id.delete_friend);
+
+            delete.setOnClickListener(ev->{
+                Api api = RetrofitClient.createService(Api.class);
+                Call<ResponseBody> call = api.deleteFriend(profile.getUsername());
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.code() == 200){
+                            Toast.makeText(mView.getContext(), "Deleted friend", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(mView.getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(mView.getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+                        call.cancel();
+                    }
+                });
+            });
         }
     }
 }

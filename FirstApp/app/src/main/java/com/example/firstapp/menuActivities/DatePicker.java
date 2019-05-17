@@ -14,7 +14,8 @@ import com.example.firstapp.R;
 import java.util.Calendar;
 
 public class DatePicker extends DialogFragment {
-
+    // This class handles the DatePicker Dialog from where the user can choose the hour and minute of
+    // the event
 
     private Context context;
 
@@ -34,7 +35,7 @@ public class DatePicker extends DialogFragment {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        return new TimePickerDialog(getActivity(),
+        return new TimePickerDialog(getActivity(),  // return the time
                 (TimePickerDialog.OnTimeSetListener) context,
                 hour, minute, DateFormat.is24HourFormat(getActivity()));
     }

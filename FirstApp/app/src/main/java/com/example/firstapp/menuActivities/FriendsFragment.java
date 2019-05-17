@@ -35,10 +35,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FriendsFragment extends Fragment {
+    // This class handles the friends screen by showing them in a Recycler view
 
     private RecyclerView friendsList;
     private ArrayList<Profile> friendsResponse;
-    private FriendsAdapter friendsAdapter;
+    private FriendsAdapter friendsAdapter; // containing the actual name, photo and the button
     private Button addFriend;
     private View rootView;
 
@@ -59,7 +60,7 @@ public class FriendsFragment extends Fragment {
         addFriend = (Button) rootView.findViewById(R.id.add_friend);
 
         handleButton(container);
-
+        // make an API call to get the user's friend
         Api friendReq = RetrofitClient.createService(Api.class);
         Call<FriendsResponse> call = friendReq.getFriends();
         call.enqueue(new Callback<FriendsResponse>() {
@@ -68,6 +69,7 @@ public class FriendsFragment extends Fragment {
 
                 FriendsResponse friendsResponse1 = response.body();
                 if(friendsResponse1 != null){
+                    // add the data to the view
                     friendsResponse = friendsResponse1.getFriends();
                     friendsAdapter.setList(friendsResponse);
                     friendsAdapter.notifyDataSetChanged();
@@ -82,6 +84,8 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 call.cancel();
+                Toast.makeText(getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+
             }
         });
 

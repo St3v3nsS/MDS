@@ -13,7 +13,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddNoteClient {
-
+    // This class handles the add event action
     public static void getResponse(final AddNote myNote, final AddNoteCallback callback, EventClass event,
                                    final FragmentTransaction fragmentTransaction){
         Api patchEvent = RetrofitClient.createService(Api.class);

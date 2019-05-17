@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.firstapp.activities.Navigation;
 import com.example.firstapp.callbacks.AddNoteCallback;
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
@@ -206,12 +207,14 @@ public class AddNote extends Fragment {
             @Override
             public void onFailure(Call<FriendsResponse> call, Throwable t) {
                 call.cancel();
+                Toast.makeText(getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
+
             }   // handle the failed call
         });
 
 
 
-        addNote.setOnClickListener(new View.OnClickListener() {
+        addNote.setOnClickListener(new View.OnClickListener() { // add the new event and refresh the page
             @Override
             public void onClick(View v) {
                 final String evName = name.getText().toString();

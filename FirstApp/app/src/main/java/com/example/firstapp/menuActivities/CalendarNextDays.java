@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CalendarNextDays extends Fragment {
-
+    // This class handles the Calendar Screen by showing a calendar from which user can choose a date
+    // for viewing the events or adding a new one
     View rootView;
 
     public CalendarNextDays() {
@@ -39,7 +40,7 @@ public class CalendarNextDays extends Fragment {
     }
 
     private void showCustomDialog(int year, int month, int dayOfMonth, ViewGroup container) {
-
+        // if we changed the date, show the alert dialog to choose from
 
         View dialogView = LayoutInflater.from(rootView.getContext()).inflate(R.layout.add_note_dialog, container, false);
 
@@ -53,11 +54,12 @@ public class CalendarNextDays extends Fragment {
         Button showEvents = (Button) dialogView.findViewById(R.id.viewEvents);
         Button addEvents = (Button) dialogView.findViewById(R.id.addEvent);
 
-        showEvents.setOnClickListener(v ->{
-            Toast.makeText(dialogView.getContext(), "Alohaa", Toast.LENGTH_LONG).show();
+        showEvents.setOnClickListener(v ->{ // show the event --> not implemented yet
+            Toast.makeText(dialogView.getContext(), "Not yet implemented", Toast.LENGTH_LONG).show();
         });
 
         addEvents.setOnClickListener(v->{
+            // create a new AddNote screen passing the selected date as arguments
             alertDialog.dismiss();
 
             AddNote addNote = new AddNote();

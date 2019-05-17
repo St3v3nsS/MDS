@@ -26,6 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUp extends AppCompatActivity {
+    // This class handles the signup activity by collecting all the data and sending it to the server
 
     private Profile profile;
     public ProgressBar progressBar;
@@ -43,7 +44,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void onLoginClick() {
-
+        // if the user has already an account --> Login Activity
         TextView login = (TextView) findViewById(R.id.alreadyLog);
         login.setOnClickListener(
                 new View.OnClickListener() {
@@ -58,7 +59,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void onSignClick() {
-
+        // Collecting all the data for creating a new user
         CardView cardView = (CardView) findViewById(R.id.registerCardView);
         cardView.setOnClickListener(
                 new View.OnClickListener() {
@@ -87,6 +88,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void validateProfile() {
+        // make an API call to validate the data
 
         Api signupApi = RetrofitClient.createService(Api.class);
         final Call<LoginResponse> responseCall = signupApi.register(new SignUpCredentials(profile.getUsername(), profile.getEmail(), profile.getPassword()));
@@ -105,12 +107,13 @@ public class SignUp extends AppCompatActivity {
                     AlertDialog alertDialog = alertBuilder.create();
                     alertDialog.show();
 
-
+                    // go to login Activity if the account was created
                     Intent login = new Intent(SignUp.this, LoginActivity.class);
                     SignUp.this.startActivity(login);
                 }
 
                 else{
+                    // try again otherwise
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(SignUp.this);
                     alertBuilder.setMessage("EMAIL/USERNAME ALREADY IN USE!");
                     AlertDialog alertDialog = alertBuilder.create();

@@ -11,6 +11,8 @@ import android.telecom.Call;
 import java.nio.channels.Channel;
 
 public class ChannelNotifications extends Application {
+    /* This class is used for creating channels when the version of Android is bigger than 8.*/
+
     public static final String CHANNEL_1 = "channel1";
     public static final String CHANNEL_2 = "channel2";
 
@@ -24,7 +26,7 @@ public class ChannelNotifications extends Application {
     private void createNotificationChannels() {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            System.out.println("here!");
+            // Creating two channels, one for push notifications, the other one for silent notification
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1,
                     "Channel 1",
@@ -38,6 +40,8 @@ public class ChannelNotifications extends Application {
             channel2.setDescription("This is channel2");
 
             NotificationManager manager = getSystemService(NotificationManager.class);
+
+            // Creating the notifications
             manager.createNotificationChannel(channel1);
             manager.createNotificationChannel(channel2);
         }
