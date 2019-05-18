@@ -70,6 +70,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
         viewHolder.setStatus(user.getEmail());
         viewHolder.setUsername(user.getUsername());
         viewHolder.buttonAction(user.getEmail(), user.getUsername());
+        viewHolder.hideButton();
     }
 
 
@@ -194,6 +195,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
 
 
             });
+        }
+
+        private void hideButton(){
+            Button delete = mView.findViewById(R.id.delete_friend);
+            delete.setVisibility(View.INVISIBLE);
         }
     }
 }

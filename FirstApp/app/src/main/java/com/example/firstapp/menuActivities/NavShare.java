@@ -22,7 +22,7 @@ public class NavShare extends android.support.v4.app.Fragment {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         StringBuilder sb = new StringBuilder();
-        sb.append("Hi, I am using the Asched App. I like this and I want you to check it out.");
+        sb.append("Hi, I am using the Eventsync App. I like this and I want you to check it out.");
         sb.append("https://play.google.com/store/apps/details?id=" + this.getContext().getPackageName());
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Test");
         sharingIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());

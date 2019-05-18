@@ -11,7 +11,7 @@
         android:fontFamily="@font/lionteen"
         android:textSize="40sp"
         android:textColor="#FFFFFF"
-        android:text="@string/asched" />
+        android:text="@string/eventsync" />
 
     <ProgressBar
         android:id="@+id/loading"

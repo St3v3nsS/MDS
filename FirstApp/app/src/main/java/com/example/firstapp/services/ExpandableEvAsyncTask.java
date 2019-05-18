@@ -22,11 +22,19 @@ public class ExpandableEvAsyncTask extends AsyncTask<String, Void, String> {
     private ExpandableListAdapter expandableListAdapter;
     private List<String> expandableListTitle;
     private HashMap<String, EventClass> expandableListDetail;
+    private String date;
 
     public ExpandableEvAsyncTask(Context context, ProgressBar progressBar, ExpandableListView expandableListView) {
         this.context = context;
         this.progressBar = progressBar;
         this.expandableListView = expandableListView;
+    }
+
+    public ExpandableEvAsyncTask(Context context, ProgressBar progressBar, ExpandableListView expandableListView, String date) {
+        this.context = context;
+        this.progressBar = progressBar;
+        this.expandableListView = expandableListView;
+        this.date = date;
     }
 
 
@@ -42,7 +50,11 @@ public class ExpandableEvAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        expandableListDetail = ExpandableEveniments.getEveniments();
+        if (date != null){
+            expandableListDetail = ExpandableEveniments.getEveniments(date);
+        }else{
+            expandableListDetail = ExpandableEveniments.getEveniments();
+        }
 
         return "SUCCESS!";
 

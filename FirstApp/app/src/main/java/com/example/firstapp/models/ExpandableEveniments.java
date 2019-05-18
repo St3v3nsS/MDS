@@ -16,7 +16,7 @@ import retrofit2.Call;
 public class ExpandableEveniments {
 
     private static final HashMap<String, EventClass> eveniments = new LinkedHashMap<>();
-
+    private static final HashMap<String, EventClass> eventsDate = new LinkedHashMap<>();
 
     public static HashMap<String, EventClass> getEveniments(){
 
@@ -41,6 +41,31 @@ public class ExpandableEveniments {
         return eveniments;
 
     }
+
+    public static HashMap<String, EventClass> getEveniments(String date){
+
+        Api retrofitClient = RetrofitClient.createService(Api.class);
+        Call<EventsResponse> call = retrofitClient.getEvents(date);
+
+        try {
+            EventsResponse body = call.execute().body();
+
+            if (body == null){
+                eventsDate.put("No events yet!", new EventClass("Try add a note"));
+                return eventsDate;
+            }
+
+            List<EventClass> eventClassList = body.getEvents();
+            for (int i = 0; i < eventClassList.size(); i++) {
+                eventsDate.put(eventClassList.get(i).getName(), eventClassList.get(i));
+            }
+        }catch (IOException eveniments1){
+            eveniments1.printStackTrace();
+        }
+        return eventsDate;
+
+    }
+
 
     public static void addEvent(@NotNull EventClass eventClass){
         eveniments.put("Event ~~~~~~~ " + eventClass.getName(), eventClass);

@@ -10,7 +10,7 @@
         android:layout_centerInParent="true"
         android:fontFamily="@font/lionteen"
         android:textSize="30sp"
-        android:text="@string/asched" />
+        android:text="@string/eventsync" />
 
     <ProgressBar
         android:id="@+id/loading"

@@ -11,9 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.example.firstapp.R;
+import com.example.firstapp.services.ExpandableEvAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,11 +55,23 @@ public class CalendarNextDays extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
-        Button showEvents = (Button) dialogView.findViewById(R.id.viewEvents);
-        Button addEvents = (Button) dialogView.findViewById(R.id.addEvent);
+        ViewFlipper flipper = (ViewFlipper) dialogView.findViewById(R.id.flipper_add_events);
+        View currentView = flipper.getCurrentView();
+
+
+        Button showEvents = (Button) currentView.findViewById(R.id.viewEvents);
+        Button addEvents = (Button) currentView.findViewById(R.id.addEvent);
 
         showEvents.setOnClickListener(v ->{ // show the event --> not implemented yet
-            Toast.makeText(dialogView.getContext(), "Not yet implemented", Toast.LENGTH_LONG).show();
+            flipper.setDisplayedChild(1);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(year + ":"); sb.append((month + 1) + ":"); sb.append(dayOfMonth+" ");
+
+            View view = flipper.getCurrentView();
+            ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListViewChosenDate);
+            ProgressBar progressBar = view.findViewById(R.id.gettingEventsProgressBarDate);
+            new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView, sb.toString()).execute("");
         });
 
         addEvents.setOnClickListener(v->{

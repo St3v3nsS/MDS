@@ -7,6 +7,7 @@ import com.example.firstapp.models.StringBody;
 import com.example.firstapp.responses.AddNoteResponse;
 import com.example.firstapp.responses.EventsResponse;
 import com.example.firstapp.responses.FriendsResponse;
+import com.example.firstapp.responses.HoursResponse;
 import com.example.firstapp.responses.LoginResponse;
 import com.example.firstapp.responses.UsersResponse;
 import com.example.firstapp.services.LoginCredentials;
@@ -23,6 +24,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface Api {
     // This is the API interface which makes calls to the server
@@ -49,6 +51,14 @@ public interface Api {
     })
     @GET("user/events")
     Call<EventsResponse> getEvents();
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @GET("user/events")
+    Call<EventsResponse> getEvents(@Query("date") String date);
 
     @Headers({
             "key: Content-Type",
@@ -131,6 +141,15 @@ public interface Api {
     })
     @POST("new_password")
     Call<AddNoteResponse> newPassword(@Body ResetPassword password);
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @GET("user/match_friend")
+    Call<HoursResponse> matchFriend(@Query("name") String friendName);
+
 
     @Headers({
             "key: Content-Type",

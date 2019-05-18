@@ -2,6 +2,7 @@ package com.example.firstapp.menuActivities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.Profile;
 import com.example.firstapp.responses.FriendsResponse;
+import com.example.firstapp.responses.HoursResponse;
 import com.example.firstapp.services.FriendsAdapter;
 import com.example.firstapp.services.LineDivider;
 import com.example.firstapp.services.RetrofitClient;
@@ -30,6 +33,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,11 +73,64 @@ public class MatchingFriends extends DialogFragment {
         Button match = rootView.findViewById(R.id.match_friend);
 
         match.setOnClickListener(v->{
+            String name = "";
             for (int i = 0; i < friendsResponse.size(); i++){
                 if(friendsList.findViewHolderForAdapterPosition(i).itemView.isSelected()){
-                    Toast.makeText(getContext(), friendsAdapter.getUsername(i), Toast.LENGTH_SHORT).show();
+                    name = friendsAdapter.getUsername(i);
                 }
             }
+
+
+
+            if(!name.isEmpty()){
+                Api api = RetrofitClient.createService(Api.class);
+                Call<HoursResponse> call = api.matchFriend(name);
+                String finalName = name;
+                call.enqueue(new Callback<HoursResponse>() {
+                    @Override
+                    public void onResponse(Call<HoursResponse> call, Response<HoursResponse> response) {
+                        if(response.code() == 200){
+                            System.out.println(response.body());
+                            System.out.println( response.body().getHours());
+                            if (response.body() != null){
+                                String[] values = new String[response.body().getHours().size()];
+                                ArrayList<String> hours = response.body().getHours();
+
+                                for(int i = 0; i < hours.size(); i++){
+                                    values[i] = hours.get(i);
+                                }
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("You and " + finalName + " can go together at");
+                                builder.setItems(values, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(getContext(), "Go to Add Event fast and create one!"
+                                                ,Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+
+                            }else{
+                                Toast.makeText(getContext(), "No hours available, please try again later!"
+                                        ,Toast.LENGTH_LONG).show();
+                            }
+                        }else{
+                            System.out.println(response.code());
+                            Toast.makeText(getContext(), "Something went wrong. Try again later!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<HoursResponse> call, Throwable throwable) {
+                        Toast.makeText(getContext(), "Something went wrong. Try again later!", Toast.LENGTH_LONG).show();
+                        call.cancel();
+                    }
+                });
+            }
+
         });
     }
 
