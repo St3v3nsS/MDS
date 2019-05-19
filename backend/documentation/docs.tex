@@ -1,0 +1,72 @@
+\documentclass{article}
+
+\title{Eventsync Server Documentation}
+\author{Popescu Nicolae-Aurelian \\ Bogdan Ionescu}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\end{titlepage}
+
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+\subsection{Overview}
+Eventsync is an application that helps circles of friends from all over the world stay connected by merging together their calendars and helping them find the perfect time to hang out. \\ \\
+\noindent
+This document provides the Eventsync server documentation, including its scope, requirements, capabilities, arhitecture and many more.
+
+\subsection{Requirements}
+The Eventsync server provides all the necessary backend services for the Eventsync Android App, available for all Android phones by accessing the Google Play Store.
+
+\subsection{Capabilities}
+The server provides the following capabilities, which can be requested by the Eventsync app:
+\begin{itemize}
+\item registration of a new user
+\item login of an existent user
+\item user logout
+\item adding a new event
+\end{itemize}
+It also maintains several databases, which contain users information, events details and session persistence cookies, all of which are vastly explained in the next sections.
+
+\subsection{Software stack}
+The server is written in Node.js, making use of its excellent asynchronous support, superior speed and REST APIs. MongoDB is used for the NoSQL database instances and Docker for deployment operations and testing purposes.
+
+\section{Database configuration}
+\subsection{Connection settings}
+Connection settings to the MongoDB instance, including the IP address, port and URL used are defined in the \verb+configuration.js+ source code file. It also defines the \verb+SESSION_SECRET+ constant, which is a custom cookie string used for user sessions.
+
+\subsection{Database instances}
+The first connection to the database and its settings are defined in the first lines of the \verb+server.js+ file. Two collections are initially created, named \verb+users+ and \verb+events+. \\
+
+\noindent The first one contains all the information known for every user, such as his username, password, name, and is indexed by username, which allows faster queries and ensures that no two users hold the same username, for login purposes.
+\\
+
+\noindent The second one holds details for all user added events, including the start date, duration, participants and description. This collection ensures two indexes, after the event name and its end date.
+
+\section{Server arhitecture}
+\subsection{Session establishment}
+A session to the server is established after the connection to the database in the \verb+server.js+ file, when a request is made to the server's IP. This session is maintained by the aforementioned \verb+SESSION_SECRET+ cookie, used for identifying the connection.
+
+\subsection{Routes}
+After the session is established, several routes are available to the user. These are defined in the \verb+routes+ folder in the source code, where is file represents a different route. These act as independent microservices, implying the fact that if one of them fails due to unknown reasons, the others will still be fully functional.
+\\
+
+\noindent Each route requires different parameters to be set, such as certain headers or cookies, which can be found in the source code. The information contained in each request, such as the username and password of a user in case of a login attempt, is parsed and cross-checked with the records in the corresponding database instance. If the request is valid, a \verb+200 HTTP Status Code+ is sent back, along with any useful or requested information. On the opposite side, if the request contained either missing or erroneous information or parameters, \verb+500 HTTP Status Code+ is raised, often accompanied by certain fields which indicate why the request was considered invalid.
+
+\section{Nonfunctional requirements}
+\subsection{Usability requirements}
+$ 100\% $ of users will be able to use the application without any knowledge of the backend services or arhitecture.
+
+\subsection{Performance requirements}
+Depending on the host platform which is used for the deployment of the server, application speed and response time may vary, but provided with a good internet connection, they will be unnoticeable.
+
+\subsection{Security requirements}
+All user passwords are encrypted with the help of several security protocols, thus a malicious attack on the server would be at most be able to obtain only the usernames, which presents no harm to the general public.
+
+\section{Testing}
+Several automated scripts were designed and deployed to send a large number of requests to the server, at different waiting times. Apart from a very insignificant delay in response time, no other features were affected.
+
+\end{document}
