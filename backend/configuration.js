@@ -4,7 +4,8 @@
 const dbHost = process.env.DB_HOST || "localhost";
 const dbPort = process.env.DB_PORT || 27017;
 const dbName = process.env.DB_NAME || "app";
-const dburl = "mongodb://" + dbHost + ":" + dbPort;
+const dburl = "mongodb+srv://auras:auras@mds-gdipc.mongodb.net/test?retryWrites=true";
+
 const serverPort = process.env.PORT || 3000;
 
 /*
@@ -14,6 +15,3 @@ exports.dburl = dburl;
 exports.dbName = dbName;
 exports.serverPort = serverPort;
 exports.secretSession = process.env.SESSION_SECRET || "YM2onwOnkkRDn5gEwbyQxMQuHoPyFrzB";
-
-let date = new Date();
-console.log(date.toISOString());

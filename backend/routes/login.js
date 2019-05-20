@@ -39,7 +39,7 @@ module.exports = function (app) {
                     });
                 }
                 else {
-                    return next(new Error("Please login to your account!"));
+                    next();
                 }
             });
         }
@@ -94,6 +94,7 @@ module.exports = function (app) {
     router.post("/", function(req, res, next) {
 
         debug("login: " + dmp(req.body));
+        console.log(req.body.password);
         // insert in mongo
         app.dbs.users.findOne(
             {"username": req.body.username},

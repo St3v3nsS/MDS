@@ -86,27 +86,113 @@ exports.generatePasswordKey = function (usersCollection, email, ipAddress, callb
                 return callback(error || "account not found");
             }
         }
-    )
+    );
+};
+
+exports.updateSecurityKey = function (usersCollection, email, ipAddress, securityCode, callback) {
+    usersCollection.findOneAndUpdate(
+        {"email": email},
+        {
+            "$set":
+                {
+                    "ip": ipAddress,
+                    "securityCode": securityCode
+                },
+            "$unset":
+                {
+                    "cookie": ''
+                }
+        },
+        {
+            "returnOriginal": false
+        },
+        function (error, result) {
+            if (result.value != null) {
+                return callback(null, result.value);
+            }
+            else {
+                return callback(error || "account not found");
+            }
+        }
+    );
+};
+
+exports.validateSecurityCode = function (usersCollection, email, securityCode, callback) {
+    usersCollection.findOneAndUpdate(
+        {
+            "email": email,
+            "securityCode": securityCode
+        },
+        {
+            "$set":
+                {
+                    "codeValidation": true
+                },
+            "$unset":
+                {
+                    "securityCode": '',
+                    "cookie": ''
+                }
+        },
+        {
+            "returnOriginal": false
+        },
+        function (error, result) {
+            if (result.value != null) {
+                return callback(null, result.value);
+            }
+            else {
+                return callback(error || "account not found");
+            }
+        }
+    );
 };
 
 exports.validatePasswordKey = function (usersCollection, passKey, ipAddress, callback) {
     // ensure the passKey maps to the user's last record ip address
-    usersCollection.findOne({"passKey": passKey, "ip": ipAddress}, callback);
+    usersCollection.findOneAndUpdate(
+        {"email": email},
+        {
+            "$set":
+                {
+                    "ip": ipAddress,
+                    "passKey": passKey
+                },
+            "$unset":
+                {
+                    "cookie": ''
+                }
+        },
+        {
+            "returnOriginal": false
+        },
+        function (error, result) {
+            if (result.value != null) {
+                return callback(null, result.value);
+            }
+            else {
+                return callback(error || "account not found");
+            }
+        }
+    );
 };
 
-exports.updatePassword = function (usersCollection, passKey, newPass, callback) {
-    saltAndHash(newPass, function (hash) {
+exports.updatePassword = function (usersCollection, email, newPass, callback) {
+    exports.saltAndHash(newPass, function (hash) {
         newPass = hash;
         usersCollection.findOneAndUpdate(
-            {"passKey": passKey},
+            {
+                "email": email,
+                "codeValidation": true
+            },
             {
                 "$set":
                     {
-                        "pass": newPass
+                        "password": newPass
                     },
                 "$unset":
                     {
-                        "passKey": ''
+                        "codeValidation": false
                     }
             },
             {
@@ -148,6 +234,7 @@ exports.saltAndHash = function (pass, callback) {
 exports.validatePassword = function (plainPass, hashedPass, callback) {
     let salt = hashedPass.substr(0, 10);
     let validHash = salt + md5(plainPass + salt);
+    console.log(hashedPass, validHash);
     return callback(null, hashedPass === validHash);
 };
 

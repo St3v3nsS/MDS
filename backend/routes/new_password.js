@@ -3,9 +3,7 @@ const debug = require("debug")("mds:server:events");
 const dmp = require("util").inspect;
 
 const express = require("express");
-const randomize = require("randomatic");
 const AM = require("../modules/account-manager");
-const EM = require("../modules/email-dispatcher");
 const Isemail = require("isemail");
 
 
@@ -50,22 +48,16 @@ module.exports = function (app) {
 
 
     router.post('/', function (req, res, next) {
-        const securityCode = randomize('0',6);
         const email = req.body.email;
+        const password = req.body.password;
 
-        AM.updateSecurityKey(app.dbs.users, email, req.ip, securityCode, function (error, account) {
+        AM.updatePassword(app.dbs.users, email, password, function (error, result) {
             if (error) {
-                return next(error);
+                return next("Unable to update password!");
             } else {
-                EM.dispatchResetPasswordCode(account, function (err, message) {
-                    if (!err) {
-                        res.send("succes send security code");
-                    } else {
-                        return next(new Error("Unable to dispatch security code!"));
-                    }
-                });
+                res.send("ok");
             }
-        });
+        })
     });
 
     return router;

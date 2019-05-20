@@ -33,6 +33,7 @@
     "cookie-parse": "^0.4.0",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
+    "emailjs": "^2.2.0",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "flat": "^4.1.0",
@@ -40,7 +41,8 @@
     "moment": "^2.24.0",
     "mongodb": "^3.1.13",
     "morgan": "^1.9.1",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "randomatic": "^3.1.1"
   },
   "engines": {
     "node": "10.15.3"

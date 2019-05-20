@@ -43,7 +43,7 @@ module.exports = function (app) {
                     return next();
                 }
                 else {
-                    return next("Email is already used!");
+                    return next(new Error("Email is already used!"));
                 }
             }
         );

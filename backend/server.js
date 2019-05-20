@@ -78,6 +78,18 @@ async.auto({
             // Middleware for register
             app.use("/events", (require("./routes/events"))(app));
 
+            // Middleware for forgot password
+            app.use("/forgot_password", (require("./routes/forgot_password"))(app));
+
+            // Middleware for check reset token
+            app.use("/check_reset_token", (require("./routes/check_reset_token"))(app));
+
+            // Middleware for updating password
+            app.use("/new_password", (require("./routes/new_password"))(app));
+
+            // Middleware for returning users
+            app.use("/users", (require("./routes/users"))(app));
+
             // Middleware for status 404
             app.use(function (req, res) {
                 res.status(404).format({
