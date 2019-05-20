@@ -90,6 +90,12 @@ async.auto({
             // Middleware for returning users
             app.use("/users", (require("./routes/users"))(app));
 
+            // Middleware for user friends
+            app.use("/user_friends", (require("./routes/user_friends"))(app));
+
+            // Middleware for posting profile photo
+            app.use("/profile_photo", (require("./routes/profile_photo"))(app));
+
             // Middleware for status 404
             app.use(function (req, res) {
                 res.status(404).format({

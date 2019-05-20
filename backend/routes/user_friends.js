@@ -3,6 +3,7 @@ const debug = require("debug")("mds:server:events");
 const dmp = require("util").inspect;
 
 const express = require("express");
+const AM = require("../modules/account-manager");
 
 module.exports = function (app) {
     let router = new express.Router();
@@ -15,7 +16,6 @@ module.exports = function (app) {
             }
 
             if (results) {
-                req.body["username"] = results["username"];
                 return next();
             }
             else {
@@ -36,7 +36,7 @@ module.exports = function (app) {
                     return next(error);
                 } else {
                     if (account) {
-                        return account.friends;
+                        res.send(account.friends);
                     }
                     else {
                         return next(new Error("Friends error"));
@@ -47,6 +47,8 @@ module.exports = function (app) {
     });
 
     router.post("/", function (req, res, next) {
+        const username = req.body.username;
+
         app.dbs.users.findOne(
             {
                 "cookie": req.cookies.login,
@@ -56,12 +58,53 @@ module.exports = function (app) {
                 if (error) {
                     return next(error);
                 } else {
-                    if (account) {
-                        return account.friends;
-                    }
-                    else {
-                        return next(new Error("Friends error"));
-                    }
+                    let collection = app.dbs.users;
+                    app.dbs.users.findOne(
+                        {
+                            "username": username
+                        }, function (err, doc) {
+                            if (err) {
+                                return next(err);
+                            } else {
+                                if (doc) {
+                                    let friends = account.friends;
+                                    if (!friends) {
+                                        friends = [];
+                                    }
+                                    else {
+                                        for (let i = 0; i < friends.length; ++i) {
+                                            if (friends[i] === username) {
+                                                return next(username + " is already friend");
+                                            }
+                                        }
+                                    }
+
+                                    friends.push(username);
+
+                                    collection.updateOne(
+                                        {
+                                            "cookie": req.cookies.login,
+                                            "ip": req.ip
+                                        },
+                                        {
+                                            "$set": {
+                                                "friends": friends
+                                            }
+                                        },
+                                        function (e, r) {
+                                            if (e) {
+                                                return next(e);
+                                            } else {
+                                                res.send("ok");
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    return next(new Error("No user " + username + " found!"));
+                                }
+                            }
+                        }
+                    );
                 }
             }
         );
