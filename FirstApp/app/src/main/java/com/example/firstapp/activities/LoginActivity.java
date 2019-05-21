@@ -31,7 +31,10 @@ import retrofit2.Response;
 public class LoginActivity extends Activity {
     // This class handles the Login Activity by checking the credentials or navigating through
     // sign up or forgot password
-
+    private static final String DETAILS = "details";
+    private static final String USER = "user";
+    private static final String DESC = "describe";
+    private static final String PASSWORD = "password";
     Profile profile;
     private ProgressBar progressBar;
 
@@ -135,6 +138,20 @@ public class LoginActivity extends Activity {
                     dashboard.putExtra("username", profile.getUsername());
                     dashboard.putExtra("password", profile.getPassword());
                     dashboard.putExtra("email", response.body().getEmail());
+
+                    SharedPreferences sharedPreferences = getSharedPreferences(DETAILS, MODE_PRIVATE);
+                    sharedPreferences.edit()
+                            .putString(USER, profile.getUsername())
+                            .apply();
+
+                    sharedPreferences.edit()
+                            .putString(PASSWORD, profile.getPassword())
+                            .apply();
+
+                    sharedPreferences.edit()
+                            .putString(DESC, response.body().getEmail())
+                            .apply();
+
                     LoginActivity.this.startActivity(dashboard);
                 }
                 else{

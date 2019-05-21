@@ -14,6 +14,7 @@ import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.Profile;
 import com.example.firstapp.models.StringBody;
+import com.example.firstapp.responses.AddNoteResponse;
 
 
 import java.util.ArrayList;
@@ -127,12 +128,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
             delete.setOnClickListener(ev->{
                 Api api = RetrofitClient.createService(Api.class);
-                Call<StringBody> call = api.deleteFriend(profile);
-                call.enqueue(new Callback<StringBody>() {
+                Call<AddNoteResponse> call = api.deleteFriend(profile);
+                call.enqueue(new Callback<AddNoteResponse>() {
                     @Override
-                    public void onResponse(Call<StringBody> call, Response<StringBody> response) {
+                    public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
                         if (response.code() == 200){
-                            Toast.makeText(mView.getContext(), "Deleted friend", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mView.getContext(), "Deleted friend! Please press again on friends!", Toast.LENGTH_LONG).show();
                         }
                         else{
                             Toast.makeText(mView.getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
@@ -140,7 +141,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     }
 
                     @Override
-                    public void onFailure(Call<StringBody> call, Throwable t) {
+                    public void onFailure(Call<AddNoteResponse> call, Throwable t) {
                         Toast.makeText(mView.getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
                         call.cancel();
                     }

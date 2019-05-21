@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
@@ -36,6 +37,7 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
     ExpandableListView expandableListView;
     ProgressBar progressBar;
     SwipeRefreshLayout swipeLayout;
+    TextView noEvents;
     View rootView;
 
     @Nullable
@@ -52,7 +54,8 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
 
         expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandableListView);
         progressBar = rootView.findViewById(R.id.gettingEventsProgressBar);
-        new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView).execute("");
+        noEvents = rootView.findViewById(R.id.text_no_events);
+        new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView, noEvents).execute("");
 
         return rootView;
     }
@@ -84,7 +87,7 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
             @Override
             public void run() {
                 swipeLayout.setRefreshing(false);
-                new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView).execute("");
+                new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView, noEvents).execute("");
             }
         },2500);
     }

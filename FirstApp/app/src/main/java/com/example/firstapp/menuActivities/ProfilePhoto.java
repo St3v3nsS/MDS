@@ -14,10 +14,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
@@ -48,6 +50,7 @@ public class ProfilePhoto extends Fragment {
     ImageView imageView;
     Integer REQUEST_CAMERA=1, SELECT_FILE=0;
     CardView cardView;
+    ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -56,6 +59,8 @@ public class ProfilePhoto extends Fragment {
         cardView = (CardView) rootView.findViewById(R.id.upload_cardview);
 
         imageView = (ImageView) rootView.findViewById(R.id.profile_image);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.add_profile_pb);
+
         getActivity().setTitle("Add profile photo");
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.import_photo);
@@ -137,22 +142,17 @@ public class ProfilePhoto extends Fragment {
 
     private void uploadImage(Bitmap bitmap) {
         cardView.setOnClickListener(v -> {
+            if(!progressBar.isShown()){
+                progressBar.setVisibility(View.VISIBLE);
+            }
             String filename = "upload";
+            FileOutputStream fos = null;
             // uploading the photo by sending a multipart call to the server
             File f = new File(getContext().getCacheDir(), filename);
             try {
 
-
-                f.createNewFile();
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bos);
-                byte[] bitmapData = bos.toByteArray();
-
-                FileOutputStream fos = new FileOutputStream(f);
-                fos.write(bitmapData);
-                fos.flush();
-                fos.close();
-
+                fos = new FileOutputStream(f);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), f);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("upload", f.getName(), reqFile);
 
@@ -161,14 +161,13 @@ public class ProfilePhoto extends Fragment {
                 call.enqueue(new Callback<StringBody>() {
                     @Override
                     public void onResponse(Call<StringBody> call, Response<StringBody> response) {
-                        Toast.makeText(getContext(),"Upload success!", Toast.LENGTH_LONG).show();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             imageView.setImageDrawable(getActivity().getDrawable(R.drawable.avatar));
                             cardView.setVisibility(View.INVISIBLE);
 
                             // update the photo
 
-                            NavigationView navigationView = (NavigationView) rootView.findViewById(R.id.nav_view);
+                            NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
                             View header = navigationView.getHeaderView(0);
                             addProfilePhoto(header);
 
@@ -199,11 +198,15 @@ public class ProfilePhoto extends Fragment {
         Api api = RetrofitClient.createService(Api.class);
         Call<PhotoResponse> call = api.getProfilePhoto();
 
+
         call.enqueue(new Callback<PhotoResponse>() {
             @Override
             public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+
                 if (response.code() == 200){
                     if (response.body() != null){
+                        Toast.makeText(getContext(),"Upload success!", Toast.LENGTH_LONG).show();
                         String url = response.body().getPhoto();
                         Uri imageUri = Uri.parse(url);
                         Picasso.get().load(imageUri).into(profilePicture);
@@ -219,6 +222,7 @@ public class ProfilePhoto extends Fragment {
 
             @Override
             public void onFailure(Call<PhotoResponse> call, Throwable throwable) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(), "Try again later!", Toast.LENGTH_LONG).show();
                 call.cancel();
             }

@@ -14,6 +14,7 @@ import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.EventClass;
 import com.example.firstapp.models.StringBody;
+import com.example.firstapp.responses.AddNoteResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,19 +89,20 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         Button deleteEvent = (Button) convertView.findViewById(R.id.delete_event);
         deleteEvent.setOnClickListener(ev->{
             Api api = RetrofitClient.createService(Api.class);
-            Call<StringBody> call = api.deleteEvent(new EventClass(expandedListText.getName()));
-            call.enqueue(new Callback<StringBody>() {
+            Call<AddNoteResponse> call = api.deleteEvent(new EventClass(expandedListText.getName()));
+            call.enqueue(new Callback<AddNoteResponse>() {
                 @Override
-                public void onResponse(Call<StringBody> call, Response<StringBody> response) {
+                public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
                     if(response.code() == 200){
-                        Toast.makeText(context, "Successfully deleted", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Successfully deleted! Please Refresh and wait!", Toast.LENGTH_LONG).show();
+
                     }else{
                         Toast.makeText(context, "Some error occured. Please try again later!", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<StringBody> call, Throwable t) {
+                public void onFailure(Call<AddNoteResponse> call, Throwable t) {
                     Toast.makeText(context, "Some error occured. Please try again later!", Toast.LENGTH_LONG).show();
                     call.cancel();
                 }

@@ -119,8 +119,7 @@ public class AddNote extends Fragment {
                             sb.append("0");
                         }
                         sb.append(minute);
-
-                        String toShow = sb.replace(sb.indexOf("T"), sb.indexOf("T")+1, " ").toString();
+                        String toShow = sb.toString();
 
                         sb.append(":");
                         sb.append(calendar.get(Calendar.SECOND));
@@ -162,7 +161,7 @@ public class AddNote extends Fragment {
                             sb.append("0");
                         }
                         sb.append(minute);
-                        String toShow = sb.replace(sb.indexOf("T"), sb.indexOf("T")+1, " ").toString();
+                        String toShow = sb.toString();
 
                         sb.append(":");
                         sb.append(calendar.get(Calendar.SECOND));

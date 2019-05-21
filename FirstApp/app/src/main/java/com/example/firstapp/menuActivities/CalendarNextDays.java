@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -69,9 +70,10 @@ public class CalendarNextDays extends Fragment {
             sb.append(year + ":"); sb.append((month + 1) + ":"); sb.append(dayOfMonth+" ");
 
             View view = flipper.getCurrentView();
+            TextView noEvents = view.findViewById(R.id.text_no_events_c);
             ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListViewChosenDate);
             ProgressBar progressBar = view.findViewById(R.id.gettingEventsProgressBarDate);
-            new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView, sb.toString()).execute("");
+            new ExpandableEvAsyncTask(getContext(), progressBar, expandableListView, sb.toString(), noEvents).execute("");
         });
 
         addEvents.setOnClickListener(v->{

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.firstapp.models.EventClass;
 import com.example.firstapp.models.ExpandableEveniments;
@@ -22,19 +23,22 @@ public class ExpandableEvAsyncTask extends AsyncTask<String, Void, String> {
     private ExpandableListAdapter expandableListAdapter;
     private List<String> expandableListTitle;
     private HashMap<String, EventClass> expandableListDetail;
+    private TextView textView;
     private String date;
 
-    public ExpandableEvAsyncTask(Context context, ProgressBar progressBar, ExpandableListView expandableListView) {
+    public ExpandableEvAsyncTask(Context context, ProgressBar progressBar, ExpandableListView expandableListView, TextView noEvents) {
         this.context = context;
         this.progressBar = progressBar;
         this.expandableListView = expandableListView;
+        this.textView = noEvents;
     }
 
-    public ExpandableEvAsyncTask(Context context, ProgressBar progressBar, ExpandableListView expandableListView, String date) {
+    public ExpandableEvAsyncTask(Context context, ProgressBar progressBar, ExpandableListView expandableListView, String date, TextView noEvents) {
         this.context = context;
         this.progressBar = progressBar;
         this.expandableListView = expandableListView;
         this.date = date;
+        this.textView = noEvents;
     }
 
 
@@ -56,6 +60,10 @@ public class ExpandableEvAsyncTask extends AsyncTask<String, Void, String> {
             expandableListDetail = ExpandableEveniments.getEveniments();
         }
 
+        if(expandableListDetail.size() == 0){
+            return "Fail";
+        }
+
         return "SUCCESS!";
 
     }
@@ -69,9 +77,13 @@ public class ExpandableEvAsyncTask extends AsyncTask<String, Void, String> {
         }
 
         if(s.equals("SUCCESS!")){
+            textView.setVisibility(View.INVISIBLE);
             expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
             expandableListAdapter = new CustomExpandableListAdapter(context, expandableListTitle, expandableListDetail);
             expandableListView.setAdapter(expandableListAdapter);
+        }
+        else {
+            textView.setVisibility(View.VISIBLE);
         }
     }
 }

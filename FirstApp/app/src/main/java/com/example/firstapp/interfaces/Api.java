@@ -58,7 +58,7 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @GET("events")
+    @GET("events/")
     Call<EventsResponse> getEvents(@Query("date") String date);
 
     @Headers({
@@ -74,8 +74,8 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @DELETE("events")
-    Call<StringBody> deleteEvent(@Body EventClass eventClass);
+    @POST("events/del")
+    Call<AddNoteResponse> deleteEvent(@Body EventClass eventClass);
 
     @Headers({
             "key: Content-Type",
@@ -91,15 +91,15 @@ public interface Api {
             "description: \"\""
     })
     @POST("friends")
-    Call<StringBody> addFriend(@Body Profile friend);
+    Call<AddNoteResponse> addFriend(@Body Profile friend);
 
     @Headers({
             "key: Content-Type",
             "value: application/json",
             "description: \"\""
     })
-    @DELETE("friends")
-    Call<StringBody> deleteFriend(@Body Profile friend);
+    @POST("friends/del")
+    Call<AddNoteResponse> deleteFriend(@Body Profile friend);
 
     @Headers({
             "key: Content-Type",
@@ -148,7 +148,7 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @GET("match_friend")
+    @GET("match_friends/")
     Call<HoursResponse> matchFriend(@Query("name") String friendName);
 
     @Headers({

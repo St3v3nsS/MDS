@@ -27,9 +27,10 @@ public class ExpandableEveniments {
             EventsResponse body = call.execute().body();
 
             if (body == null){
-                eveniments.put("No events yet!", new EventClass("Try add a note"));
+                eveniments.clear();
                 return eveniments;
             }
+            eveniments.clear();
 
             List<EventClass> eventClassList = body.getEvents();
             for (int i = 0; i < eventClassList.size(); i++) {
@@ -51,9 +52,11 @@ public class ExpandableEveniments {
             EventsResponse body = call.execute().body();
 
             if (body == null){
-                eventsDate.put("No events yet!", new EventClass("Try add a note"));
+                eventsDate.clear();
                 return eventsDate;
             }
+
+            eventsDate.clear();
 
             List<EventClass> eventClassList = body.getEvents();
             for (int i = 0; i < eventClassList.size(); i++) {

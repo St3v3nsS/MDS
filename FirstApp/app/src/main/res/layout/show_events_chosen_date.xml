@@ -34,4 +34,14 @@
         </ExpandableListView>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_no_events_c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/lionteen"
+        android:text="@string/no_events_yet"
+        android:textSize="40sp" />
+
 </RelativeLayout>

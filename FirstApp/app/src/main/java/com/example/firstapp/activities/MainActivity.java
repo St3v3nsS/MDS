@@ -14,10 +14,18 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.example.firstapp.R;
+import com.example.firstapp.interfaces.Api;
+import com.example.firstapp.responses.LoginResponse;
+import com.example.firstapp.services.LoginCredentials;
+import com.example.firstapp.services.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     // This class handles the Loading screen. It will check in shared preferences if the user
@@ -31,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String DETAILS = "details";
     private static final String USER = "user";
     private static final String DESC = "describe";
+    private static final String PASSWORD = "password";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,13 +88,33 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences(DETAILS, MODE_PRIVATE);
                         String user = sharedPreferences.getString(USER, null);
                         String email = sharedPreferences.getString(DESC, null);
+                        String password = sharedPreferences.getString(PASSWORD, null);
 
-                        Intent intent = new Intent(MainActivity.this, Navigation.class);
-                        intent.putExtra("username", user);
-                        intent.putExtra("password", "no-show");
-                        intent.putExtra("email", email);
+                        Api api = RetrofitClient.createService(Api.class);
+                        Call<LoginResponse> call = api.loginWithCredentials(new LoginCredentials(user, password));
+                        call.enqueue(new Callback<LoginResponse>() {
+                            @Override
+                            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                                if (response.code() == 200 ){
 
-                        MainActivity.this.startActivity(intent);
+                                    Intent intent = new Intent(MainActivity.this, Navigation.class);
+                                    intent.putExtra("username", user);
+                                    intent.putExtra("password", "no-show");
+                                    intent.putExtra("email", email);
+
+                                    MainActivity.this.startActivity(intent);
+                                }else {
+                                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                    MainActivity.this.startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<LoginResponse> call, Throwable t) {
+
+                            }
+                        });
+
                     }
                 }
             }
