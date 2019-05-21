@@ -26,6 +26,7 @@ import com.example.firstapp.activities.ChannelNotifications;
 import com.example.firstapp.activities.MainActivity;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.Profile;
+import com.example.firstapp.models.StringBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,10 +174,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
                 Integer randomId = new Random().nextInt(799);
 
                 Api addFriend = RetrofitClient.createService(Api.class);
-                Call<ResponseBody> call = addFriend.addFriend(username);
-                call.enqueue(new Callback<ResponseBody>() {
+                Call<StringBody> call = addFriend.addFriend(new Profile(username));
+                call.enqueue(new Callback<StringBody>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(Call<StringBody> call, Response<StringBody> response) {
                         if (response.code() == 200){
                             notificationManager.notify(randomId, notification);
                             Toast.makeText(mView.getContext(), "Added friend " + username, Toast.LENGTH_LONG).show();
@@ -188,7 +189,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(Call<StringBody> call, Throwable t) {
                         call.cancel();
                     }
                 });

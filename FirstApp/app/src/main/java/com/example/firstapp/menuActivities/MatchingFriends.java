@@ -90,8 +90,7 @@ public class MatchingFriends extends DialogFragment {
                     @Override
                     public void onResponse(Call<HoursResponse> call, Response<HoursResponse> response) {
                         if(response.code() == 200){
-                            System.out.println(response.body());
-                            System.out.println( response.body().getHours());
+
                             if (response.body() != null){
                                 String[] values = new String[response.body().getHours().size()];
                                 ArrayList<String> hours = response.body().getHours();

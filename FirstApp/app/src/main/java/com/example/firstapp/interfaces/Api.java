@@ -1,7 +1,8 @@
 package com.example.firstapp.interfaces;
 
-import com.example.firstapp.SignUpCredentials;
+import com.example.firstapp.models.CodeChecker;
 import com.example.firstapp.models.EventClass;
+import com.example.firstapp.models.Profile;
 import com.example.firstapp.models.ResetPassword;
 import com.example.firstapp.models.StringBody;
 import com.example.firstapp.responses.AddNoteResponse;
@@ -12,6 +13,7 @@ import com.example.firstapp.responses.LoginResponse;
 import com.example.firstapp.responses.PhotoResponse;
 import com.example.firstapp.responses.UsersResponse;
 import com.example.firstapp.services.LoginCredentials;
+import com.example.firstapp.services.SignUpCredentials;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -21,10 +23,8 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Api {
@@ -50,7 +50,7 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @GET("user/events")
+    @GET("events")
     Call<EventsResponse> getEvents();
 
     @Headers({
@@ -58,7 +58,7 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @GET("user/events")
+    @GET("events")
     Call<EventsResponse> getEvents(@Query("date") String date);
 
     @Headers({
@@ -66,23 +66,23 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @PATCH("user/events/{name}")
-    Call<AddNoteResponse> addEvent(@Path ("name") String name, @Body EventClass eventClass);
+    @POST("events")
+    Call<AddNoteResponse> addEvent(@Body EventClass eventClass);
 
     @Headers({
             "key: Content-Type",
             "value: application/json",
             "description: \"\""
     })
-    @DELETE("user/events/{name}")
-    Call<ResponseBody> deleteEvent(@Path("name") String name);
+    @DELETE("events")
+    Call<StringBody> deleteEvent(@Body EventClass eventClass);
 
     @Headers({
             "key: Content-Type",
             "value: application/json",
             "description: \"\""
     })
-    @GET("user/friends")
+    @GET("friends")
     Call<FriendsResponse> getFriends();
 
     @Headers({
@@ -90,16 +90,16 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @PATCH("user/friends/{name}")
-    Call<ResponseBody> addFriend(@Path("name") String name);
+    @POST("friends")
+    Call<StringBody> addFriend(@Body Profile friend);
 
     @Headers({
             "key: Content-Type",
             "value: application/json",
             "description: \"\""
     })
-    @DELETE("user/friends/{name}")
-    Call<ResponseBody> deleteFriend(@Path("name") String name);
+    @DELETE("friends")
+    Call<StringBody> deleteFriend(@Body Profile friend);
 
     @Headers({
             "key: Content-Type",
@@ -107,8 +107,8 @@ public interface Api {
             "description: \"\""
     })
     @Multipart
-    @POST("user/profile_photo")
-    Call<ResponseBody> uploadPhoto(@Part MultipartBody.Part image);
+    @POST("profile_photo")
+    Call<StringBody> uploadPhoto(@Part MultipartBody.Part image);
 
     @Headers({
             "key: Content-Type",
@@ -133,7 +133,7 @@ public interface Api {
             "description: \"\""
     })
     @POST("check_reset_token")
-    Call<AddNoteResponse> checkResetToken(@Body StringBody token);
+    Call<AddNoteResponse> checkResetToken(@Body CodeChecker token);
 
     @Headers({
             "key: Content-Type",
@@ -148,7 +148,7 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @GET("user/match_friend")
+    @GET("match_friend")
     Call<HoursResponse> matchFriend(@Query("name") String friendName);
 
     @Headers({
@@ -156,7 +156,7 @@ public interface Api {
             "value: application/json",
             "description: \"\""
     })
-    @GET("user/profile_photo")
+    @GET("profile_photo")
     Call<PhotoResponse> getProfilePhoto();
 
 

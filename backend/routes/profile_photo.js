@@ -64,7 +64,7 @@ module.exports = function (app) {
         );
     });
 
-    router.post("/", upload.single("avatar"), function (req, res, next) {
+    router.post("/", upload.single("upload"), function (req, res, next) {
         let tmp_path = req.file.path;
         cloudinary.uploader.upload(tmp_path, {tags: "basic_avatar"}, function (err, image) {
             if (err) {
@@ -84,7 +84,9 @@ module.exports = function (app) {
                         return next(e);
                     }
                     del([tmp_path]);
-                    res.send("Image: " + image.url + " uploaded with succes.");
+                    res.json({
+                        "message": "Image: " +image.url + " uploaded with succes."
+                    });
                 }
             );
         });

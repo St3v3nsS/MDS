@@ -27,7 +27,9 @@ module.exports = function (app) {
                         });
                     }
 
-                    res.send(sendObj);
+                    res.json({
+                        "users": sendObj
+                    });
                 } else {
                     return next(new Error("No users"));
                 }

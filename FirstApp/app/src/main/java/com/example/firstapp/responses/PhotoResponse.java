@@ -2,17 +2,17 @@ package com.example.firstapp.responses;
 
 public class PhotoResponse {
 
-    private String url;
+    private String photo;
 
     public PhotoResponse(String url) {
-        this.url = url;
+        this.photo = url;
     }
 
-    public String getUrl() {
-        return url;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

@@ -17,14 +17,13 @@ public class AddNoteClient {
     public static void getResponse(final AddNote myNote, final AddNoteCallback callback, EventClass event,
                                    final FragmentTransaction fragmentTransaction){
         Api patchEvent = RetrofitClient.createService(Api.class);
-        Call<AddNoteResponse> call = patchEvent.addEvent(event.getName(), event);
+        Call<AddNoteResponse> call = patchEvent.addEvent(event);
         System.out.println("Before Callback");
         call.enqueue(new Callback<AddNoteResponse>() {
             @Override
             public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
                 System.out.println("in onresp");
                 callback.onResponse(myNote, fragmentTransaction);
-
 
             }
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.EventClass;
+import com.example.firstapp.models.StringBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,10 +88,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         Button deleteEvent = (Button) convertView.findViewById(R.id.delete_event);
         deleteEvent.setOnClickListener(ev->{
             Api api = RetrofitClient.createService(Api.class);
-            Call<ResponseBody> call = api.deleteEvent(expandedListText.getName());
-            call.enqueue(new Callback<ResponseBody>() {
+            Call<StringBody> call = api.deleteEvent(new EventClass(expandedListText.getName()));
+            call.enqueue(new Callback<StringBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<StringBody> call, Response<StringBody> response) {
                     if(response.code() == 200){
                         Toast.makeText(context, "Successfully deleted", Toast.LENGTH_LONG).show();
                     }else{
@@ -99,7 +100,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<StringBody> call, Throwable t) {
                     Toast.makeText(context, "Some error occured. Please try again later!", Toast.LENGTH_LONG).show();
                     call.cancel();
                 }

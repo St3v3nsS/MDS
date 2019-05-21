@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-public class Profile implements Serializable {
+public class  Profile implements Serializable {
 
     @NotNull
     private String username;
@@ -39,6 +39,10 @@ public class Profile implements Serializable {
     }
 
     public Profile() {
+    }
+
+    public Profile(@NotNull String username) {
+        this.username = username;
     }
 
     @Override

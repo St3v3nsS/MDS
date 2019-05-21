@@ -13,6 +13,7 @@ import android.widget.ViewFlipper;
 
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
+import com.example.firstapp.models.CodeChecker;
 import com.example.firstapp.models.ResetPassword;
 import com.example.firstapp.models.StringBody;
 import com.example.firstapp.responses.AddNoteResponse;
@@ -31,6 +32,7 @@ public class ForgotPassword extends AppCompatActivity {
     /* This class handles the forgot password functionality. It is implemented using ViewFlipper*/
 
     private ViewFlipper viewFlipper;
+    private String emailS;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,13 +52,15 @@ public class ForgotPassword extends AppCompatActivity {
         send.setOnClickListener(v->{
             TextView textView = (TextView)findViewById(R.id.check_email_code);
             textView.setVisibility(View.VISIBLE);
-
             // Making an Api call to the server to send the code to email
             Api sendEmail = RetrofitClient.createService(Api.class);
+            emailS = email.getText().toString();
             Call<AddNoteResponse> call = sendEmail.forgotPassword(new StringBody(email.getText().toString()));
             call.enqueue(new Callback<AddNoteResponse>() {
                 @Override
                 public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
+                    System.out.println(response.code());
+                    System.out.println(response.body());
                     if (response.code() == 200){
                         changeDisplayToCode(); // go to next View --- > code sent to email
                     }else {
@@ -88,7 +92,7 @@ public class ForgotPassword extends AppCompatActivity {
 
         check.setOnClickListener(v->{
             Api api = RetrofitClient.createService(Api.class);
-            Call<AddNoteResponse> call = api.checkResetToken(new StringBody(code.getText().toString()));
+            Call<AddNoteResponse> call = api.checkResetToken(new CodeChecker(emailS, code.getText().toString()));
             call.enqueue(new Callback<AddNoteResponse>() {
                 @Override
                 public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
@@ -117,11 +121,11 @@ public class ForgotPassword extends AppCompatActivity {
         EditText pass = (EditText) view.findViewById(R.id.new_pass);
         EditText confPass = (EditText) view.findViewById(R.id.confirm_new_pass);
 
-        ResetPassword body = new ResetPassword(pass.getText().toString(), confPass.getText().toString());
-
         Button done = (Button) view.findViewById(R.id.renew_password);
 
         done.setOnClickListener(v->{
+            ResetPassword body = new ResetPassword(emailS, pass.getText().toString(), confPass.getText().toString());
+
             Api api = RetrofitClient.createService(Api.class);
             Call<AddNoteResponse> call = api.newPassword(body);
 

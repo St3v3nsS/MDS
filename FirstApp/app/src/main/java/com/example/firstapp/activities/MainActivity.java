@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(PREF_COOKIE, MODE_PRIVATE);
         Set<String> cookies = preferences.getStringSet(HAS_COOKIE, new HashSet<>());
+        System.out.println(cookies);
         String user  = getSharedPreferences(DETAILS, MODE_PRIVATE).getString(USER, null);
         Thread timer = new Thread(){
             @Override
@@ -72,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
                             MainActivity.this.startActivity(intent);
 
                     }
-                    else{ // if there are, create the Navigation screen with preferences set
+                    else{
+                        // if there are, create the Navigation screen with preferences set
                         SharedPreferences sharedPreferences = getSharedPreferences(DETAILS, MODE_PRIVATE);
                         String user = sharedPreferences.getString(USER, null);
                         String email = sharedPreferences.getString(DESC, null);

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,19 +14,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
-import com.example.firstapp.activities.Navigation;
 import com.example.firstapp.interfaces.Api;
+import com.example.firstapp.models.StringBody;
 import com.example.firstapp.responses.PhotoResponse;
 import com.example.firstapp.services.RetrofitClient;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -139,7 +137,7 @@ public class ProfilePhoto extends Fragment {
 
     private void uploadImage(Bitmap bitmap) {
         cardView.setOnClickListener(v -> {
-            String filename = "currentImageToUpload";
+            String filename = "upload";
             // uploading the photo by sending a multipart call to the server
             File f = new File(getContext().getCacheDir(), filename);
             try {
@@ -159,10 +157,10 @@ public class ProfilePhoto extends Fragment {
                 MultipartBody.Part body = MultipartBody.Part.createFormData("upload", f.getName(), reqFile);
 
                 Api service = RetrofitClient.createService(Api.class);
-                Call<ResponseBody> call = service.uploadPhoto(body);
-                call.enqueue(new Callback<ResponseBody>() {
+                Call<StringBody> call = service.uploadPhoto(body);
+                call.enqueue(new Callback<StringBody>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(Call<StringBody> call, Response<StringBody> response) {
                         Toast.makeText(getContext(),"Upload success!", Toast.LENGTH_LONG).show();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             imageView.setImageDrawable(getActivity().getDrawable(R.drawable.avatar));
@@ -182,7 +180,7 @@ public class ProfilePhoto extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(Call<StringBody> call, Throwable t) {
                         call.cancel();
 
                     }
@@ -206,9 +204,9 @@ public class ProfilePhoto extends Fragment {
             public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
                 if (response.code() == 200){
                     if (response.body() != null){
-                        String url = response.body().getUrl();
+                        String url = response.body().getPhoto();
                         Uri imageUri = Uri.parse(url);
-                        profilePicture.setImageURI(imageUri);
+                        Picasso.get().load(imageUri).into(profilePicture);
                     }else{
                         Toast.makeText(getContext(), "No image found", Toast.LENGTH_LONG).show();
                     }

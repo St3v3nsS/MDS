@@ -15,11 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
-import com.example.firstapp.SignUpCredentials;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.responses.LoginResponse;
 import com.example.firstapp.models.Profile;
 import com.example.firstapp.services.RetrofitClient;
+import com.example.firstapp.services.SignUpCredentials;
 
 import retrofit2.Call;
 import retrofit2.Callback;

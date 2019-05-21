@@ -31,12 +31,31 @@ module.exports = function (app) {
                 "cookie": req.cookies.login,
                 "ip": req.ip
             },
-            function (error, account) {
+            async function (error, account) {
                 if (error) {
                     return next(error);
                 } else {
                     if (account) {
-                        res.send(account.friends);
+                        let auxArr = [];
+                        for (let i = 0;i < account.friends.length; ++i) {
+                            let obj = await app.dbs.users.findOne(
+                                {
+                                    "username": account.friends[i]
+                                }
+                            );
+
+                                auxArr.push({
+                                    "username": obj.username,
+                                    "password": obj.password,
+                                    "email": obj.email
+                                })
+
+                        }
+
+                        console.log(auxArr);
+                        res.json({
+                            "friends": auxArr
+                        });
                     }
                     else {
                         return next(new Error("Friends error"));
@@ -95,7 +114,9 @@ module.exports = function (app) {
                                             if (e) {
                                                 return next(e);
                                             } else {
-                                                res.send("ok");
+                                                res.json({
+                                                    "message": "ok"
+                                                });
                                             }
                                         }
                                     )

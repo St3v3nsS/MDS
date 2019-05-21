@@ -39,6 +39,7 @@ public class ReceivedCookieInterceptor implements Interceptor {
                     .putStringSet(HAS_COOKIE, cookies)
                     .apply();
 
+            System.out.println(preferences.getStringSet(HAS_COOKIE, new HashSet<>()));
         }
 
         return originalResponse;

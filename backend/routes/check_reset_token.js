@@ -32,7 +32,9 @@ module.exports = function (app) {
                 return next(new Error("something went wrong"));
             } else {
                 if (account) {
-                    res.send("ok");
+                    res.json({
+                        "message": "ok"
+                    });
                 } else {
                     return next(new Error("something went wrong"));
                 }

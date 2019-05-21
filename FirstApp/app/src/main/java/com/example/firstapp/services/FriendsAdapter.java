@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.firstapp.R;
 import com.example.firstapp.interfaces.Api;
 import com.example.firstapp.models.Profile;
+import com.example.firstapp.models.StringBody;
 
 
 import java.util.ArrayList;
@@ -126,10 +127,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
             delete.setOnClickListener(ev->{
                 Api api = RetrofitClient.createService(Api.class);
-                Call<ResponseBody> call = api.deleteFriend(profile.getUsername());
-                call.enqueue(new Callback<ResponseBody>() {
+                Call<StringBody> call = api.deleteFriend(profile);
+                call.enqueue(new Callback<StringBody>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(Call<StringBody> call, Response<StringBody> response) {
                         if (response.code() == 200){
                             Toast.makeText(mView.getContext(), "Deleted friend", Toast.LENGTH_LONG).show();
                         }
@@ -139,7 +140,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(Call<StringBody> call, Throwable t) {
                         Toast.makeText(mView.getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
                         call.cancel();
                     }

@@ -50,12 +50,15 @@ module.exports = function (app) {
     router.post('/', function (req, res, next) {
         const email = req.body.email;
         const password = req.body.password;
+        console.log(req.body.email, req.body.password);
 
         AM.updatePassword(app.dbs.users, email, password, function (error, result) {
             if (error) {
                 return next("Unable to update password!");
             } else {
-                res.send("ok");
+                res.json({
+                    "message": "ok"
+                });
             }
         })
     });

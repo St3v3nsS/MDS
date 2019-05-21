@@ -59,7 +59,9 @@ module.exports = function (app) {
             } else {
                 EM.dispatchResetPasswordCode(account, function (err, message) {
                     if (!err) {
-                        res.send("succes send security code");
+                        res.json({
+                            "message": "ok"
+                        });
                     } else {
                         return next(new Error("Unable to dispatch security code!"));
                     }

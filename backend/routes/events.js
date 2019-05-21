@@ -13,6 +13,11 @@ module.exports = function (app) {
 
     // Middleware for checking credentials
     router.use("/", function (req, res, next) {
+        console.log({
+            "login": req.cookies.login,
+            "ip": req.ip
+        });
+
         AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {
             if (error) {
                 return next(error);
@@ -112,7 +117,19 @@ module.exports = function (app) {
             }
 
             if (documents instanceof Array && documents.length) {
-                res.json(documents);
+                let auxArray = [];
+                for (let i = 0;i < documents.length; ++i) {
+                    auxArray.push({
+                        "name": documents[0].name,
+                        "startDate": new Date(documents[0].startDate).toString(),
+                        "endDate": new Date(documents[0].endDate).toString(),
+                        "friends": documents[0].friends
+                    });
+                }
+                console.log(auxArray);
+                res.json({
+                    "events": auxArray
+                });
             }
             else {
                 return next(new Error("no events"));

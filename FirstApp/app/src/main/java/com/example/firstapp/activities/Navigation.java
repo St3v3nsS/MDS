@@ -38,6 +38,7 @@ import com.example.firstapp.menuActivities.ProfilePhoto;
 import com.example.firstapp.models.Profile;
 import com.example.firstapp.responses.PhotoResponse;
 import com.example.firstapp.services.RetrofitClient;
+import com.squareup.picasso.Picasso;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -112,9 +113,9 @@ public class Navigation extends AppCompatActivity
             public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
                 if (response.code() == 200){
                     if (response.body() != null){
-                        String url = response.body().getUrl();
+                        String url = response.body().getPhoto();
                         Uri imageUri = Uri.parse(url);
-                        imageView.setImageURI(imageUri);
+                        Picasso.get().load(imageUri).into(imageView);
                     }else{
                         Toast.makeText(Navigation.this, "No image found", Toast.LENGTH_LONG).show();
                     }

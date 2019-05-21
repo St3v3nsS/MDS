@@ -91,7 +91,7 @@ async.auto({
             app.use("/users", (require("./routes/users"))(app));
 
             // Middleware for user friends
-            app.use("/user_friends", (require("./routes/user_friends"))(app));
+            app.use("/friends", (require("./routes/friends"))(app));
 
             // Middleware for posting profile photo
             app.use("/profile_photo", (require("./routes/profile_photo"))(app));
