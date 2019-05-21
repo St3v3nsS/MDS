@@ -96,6 +96,9 @@ async.auto({
             // Middleware for posting profile photo
             app.use("/profile_photo", (require("./routes/profile_photo"))(app));
 
+            // Middleware for matching friends
+            app.use("/match_friends", (require("./routes/match_friends"))(app));
+
             // Middleware for status 404
             app.use(function (req, res) {
                 res.status(404).format({

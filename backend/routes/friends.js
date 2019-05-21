@@ -37,6 +37,9 @@ module.exports = function (app) {
                 } else {
                     if (account) {
                         let auxArr = [];
+                        if (!account.friends) {
+                            account.friends = [];
+                        }
                         for (let i = 0;i < account.friends.length; ++i) {
                             let obj = await app.dbs.users.findOne(
                                 {
@@ -44,15 +47,13 @@ module.exports = function (app) {
                                 }
                             );
 
-                                auxArr.push({
-                                    "username": obj.username,
-                                    "password": obj.password,
-                                    "email": obj.email
-                                })
-
+                            auxArr.push({
+                                "username": obj.username,
+                                "password": obj.password,
+                                "email": obj.email
+                            });
                         }
 
-                        console.log(auxArr);
                         res.json({
                             "friends": auxArr
                         });
@@ -99,6 +100,72 @@ module.exports = function (app) {
                                     }
 
                                     friends.push(username);
+
+                                    collection.updateOne(
+                                        {
+                                            "cookie": req.cookies.login,
+                                            "ip": req.ip
+                                        },
+                                        {
+                                            "$set": {
+                                                "friends": friends
+                                            }
+                                        },
+                                        function (e, r) {
+                                            if (e) {
+                                                return next(e);
+                                            } else {
+                                                res.json({
+                                                    "message": "ok"
+                                                });
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    return next(new Error("No user " + username + " found!"));
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+        );
+    });
+
+    router.post("/del", function (req, res, next) {
+        const username = req.body.username;
+
+        console.log(username);
+        app.dbs.users.findOne(
+            {
+                "cookie": req.cookies.login,
+                "ip": req.ip
+            },
+            function (error, account) {
+                if (error) {
+                    return next(error);
+                } else {
+                    let collection = app.dbs.users;
+                    app.dbs.users.findOne(
+                        {
+                            "username": username
+                        }, function (err, doc) {
+                            if (err) {
+                                return next(err);
+                            } else {
+                                if (doc) {
+                                    let friends = account.friends;
+                                    if (!friends) {
+                                        friends = [];
+                                    }
+                                    else {
+                                        for (let i = 0; i < friends.length; ++i) {
+                                            if (friends[i] === username) {
+                                                friends.splice(friends.indexOf(username), 1);
+                                                break;
+                                            }
+                                        }
+                                    }
 
                                     collection.updateOne(
                                         {

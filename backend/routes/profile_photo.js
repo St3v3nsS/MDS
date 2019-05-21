@@ -28,6 +28,7 @@ const upload = multer({ storage: storage });
 module.exports = function (app) {
     let router = new express.Router();
     let username = null;
+
     // Middleware for checking credentials
     router.use("/", function (req, res, next) {
         AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {

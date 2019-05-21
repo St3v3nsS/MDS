@@ -96,7 +96,9 @@ module.exports = function (app) {
                 console.log("succes insert");
 
                 results["message"] = "ok";
-                res.json(results);
+                res.json({
+                    "message": "ok"
+                });
             }
         );
     });
@@ -137,5 +139,22 @@ module.exports = function (app) {
         });
     });
 
+    // Delete route
+    router.post("/del", function (req, res, next) {
+        let name = req.body.name;
+
+        app.dbs.events.deleteOne({
+            "username": req.body.username,
+            "name": name
+        }, function (e, result) {
+            if (e) {
+                return next(e);
+            }
+
+            res.json({
+                "message": "ok"
+            });
+        });
+    });
     return router;
 };
