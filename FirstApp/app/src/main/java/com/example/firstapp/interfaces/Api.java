@@ -9,6 +9,7 @@ import com.example.firstapp.responses.EventsResponse;
 import com.example.firstapp.responses.FriendsResponse;
 import com.example.firstapp.responses.HoursResponse;
 import com.example.firstapp.responses.LoginResponse;
+import com.example.firstapp.responses.PhotoResponse;
 import com.example.firstapp.responses.UsersResponse;
 import com.example.firstapp.services.LoginCredentials;
 
@@ -149,6 +150,14 @@ public interface Api {
     })
     @GET("user/match_friend")
     Call<HoursResponse> matchFriend(@Query("name") String friendName);
+
+    @Headers({
+            "key: Content-Type",
+            "value: application/json",
+            "description: \"\""
+    })
+    @GET("user/profile_photo")
+    Call<PhotoResponse> getProfilePhoto();
 
 
     @Headers({

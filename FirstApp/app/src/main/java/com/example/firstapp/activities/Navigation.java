@@ -2,6 +2,7 @@ package com.example.firstapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.example.firstapp.menuActivities.FriendsFragment;
 import com.example.firstapp.menuActivities.NavShare;
 import com.example.firstapp.menuActivities.ProfilePhoto;
 import com.example.firstapp.models.Profile;
+import com.example.firstapp.responses.PhotoResponse;
 import com.example.firstapp.services.RetrofitClient;
 
 import okhttp3.ResponseBody;
@@ -50,6 +53,8 @@ public class Navigation extends AppCompatActivity
     private static final String DETAILS = "details";
     private static final String USER = "user";
     private static final String DESC = "describe";
+
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +93,45 @@ public class Navigation extends AppCompatActivity
         TextView email = (TextView) header.findViewById(R.id.email);
         email.setText(profile.getEmail());
 
+        // edit the profile photo
+
+        addProfilePhoto(header);
+
 
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void addProfilePhoto(View header) {
+        imageView = (ImageView) header.findViewById(R.id.profile_picture);
+
+        Api api = RetrofitClient.createService(Api.class);
+        Call<PhotoResponse> call = api.getProfilePhoto();
+
+        call.enqueue(new Callback<PhotoResponse>() {
+            @Override
+            public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
+                if (response.code() == 200){
+                    if (response.body() != null){
+                        String url = response.body().getUrl();
+                        Uri imageUri = Uri.parse(url);
+                        imageView.setImageURI(imageUri);
+                    }else{
+                        Toast.makeText(Navigation.this, "No image found", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+                else{
+                    Toast.makeText(Navigation.this, "Try again later!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PhotoResponse> call, Throwable throwable) {
+                Toast.makeText(Navigation.this, "Try again later!", Toast.LENGTH_LONG).show();
+                call.cancel();
+            }
+        });
+
     }
 
     private void getProfile() {

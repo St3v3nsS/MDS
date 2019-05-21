@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
@@ -23,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
+import com.example.firstapp.activities.Navigation;
 import com.example.firstapp.interfaces.Api;
+import com.example.firstapp.responses.PhotoResponse;
 import com.example.firstapp.services.RetrofitClient;
 
 import java.io.ByteArrayOutputStream;
@@ -165,6 +168,13 @@ public class ProfilePhoto extends Fragment {
                             imageView.setImageDrawable(getActivity().getDrawable(R.drawable.avatar));
                             cardView.setVisibility(View.INVISIBLE);
 
+                            // update the photo
+
+                            NavigationView navigationView = (NavigationView) rootView.findViewById(R.id.nav_view);
+                            View header = navigationView.getHeaderView(0);
+                            addProfilePhoto(header);
+
+
                         }else {
                             Toast.makeText(getContext(), "Some error occurred. Try again!", Toast.LENGTH_LONG).show();
 
@@ -184,5 +194,39 @@ public class ProfilePhoto extends Fragment {
         });
 
     }
+
+    private void addProfilePhoto(View header) {
+        ImageView profilePicture = (ImageView) header.findViewById(R.id.profile_picture);
+
+        Api api = RetrofitClient.createService(Api.class);
+        Call<PhotoResponse> call = api.getProfilePhoto();
+
+        call.enqueue(new Callback<PhotoResponse>() {
+            @Override
+            public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
+                if (response.code() == 200){
+                    if (response.body() != null){
+                        String url = response.body().getUrl();
+                        Uri imageUri = Uri.parse(url);
+                        profilePicture.setImageURI(imageUri);
+                    }else{
+                        Toast.makeText(getContext(), "No image found", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+                else{
+                    Toast.makeText(getContext(), "Try again later!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PhotoResponse> call, Throwable throwable) {
+                Toast.makeText(getContext(), "Try again later!", Toast.LENGTH_LONG).show();
+                call.cancel();
+            }
+        });
+
+    }
+
 
 }
