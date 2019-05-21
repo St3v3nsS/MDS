@@ -122,10 +122,10 @@ module.exports = function (app) {
                 let auxArray = [];
                 for (let i = 0;i < documents.length; ++i) {
                     auxArray.push({
-                        "name": documents[0].name,
-                        "startDate": new Date(documents[0].startDate).toString(),
-                        "endDate": new Date(documents[0].endDate).toString(),
-                        "friends": documents[0].friends
+                        "name": documents[i].name,
+                        "startDate": new Date(documents[i].startDate).toString(),
+                        "endDate": new Date(documents[i].endDate).toString(),
+                        "friends": documents[i].friends
                     });
                 }
                 console.log(auxArray);
