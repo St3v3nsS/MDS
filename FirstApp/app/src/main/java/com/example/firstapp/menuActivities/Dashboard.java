@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Dashboard extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    // this class is used for showing the events and the button for matching friends. It is the main page after login.
 
     ExpandableListView expandableListView;
     ProgressBar progressBar;
@@ -51,7 +52,7 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
         if(swipeLayout != null) {
             swipeLayout.setOnRefreshListener(this);
         }
-
+        // getting the expandable list, progress bar and the no events text then create the ExpandableEv class
         expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandableListView);
         progressBar = rootView.findViewById(R.id.gettingEventsProgressBar);
         noEvents = rootView.findViewById(R.id.text_no_events);
@@ -68,6 +69,7 @@ public class Dashboard extends android.support.v4.app.Fragment implements SwipeR
 
     }
 
+    // the button to choose friends
     private void chooseFriend(View view) {
 
         Button chooseAFriend = (Button) rootView.findViewById(R.id.choose_friend); // get the choose friend button

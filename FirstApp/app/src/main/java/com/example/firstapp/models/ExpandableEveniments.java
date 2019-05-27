@@ -14,10 +14,12 @@ import java.util.List;
 import retrofit2.Call;
 
 public class ExpandableEveniments {
+    // the events list to set in the dashboard
 
     private static final HashMap<String, EventClass> eveniments = new LinkedHashMap<>();
     private static final HashMap<String, EventClass> eventsDate = new LinkedHashMap<>();
 
+    // get the events for current date
     public static HashMap<String, EventClass> getEveniments(){
 
         Api retrofitClient = RetrofitClient.createService(Api.class);
@@ -26,12 +28,14 @@ public class ExpandableEveniments {
         try {
             EventsResponse body = call.execute().body();
 
+            // no events clear everything
             if (body == null){
                 eveniments.clear();
                 return eveniments;
             }
             eveniments.clear();
 
+            // add the events received
             List<EventClass> eventClassList = body.getEvents();
             for (int i = 0; i < eventClassList.size(); i++) {
                 eveniments.put("Event ~~~~~~~ " + eventClassList.get(i).getName(), eventClassList.get(i));
@@ -43,6 +47,7 @@ public class ExpandableEveniments {
 
     }
 
+    // get the events from specific date
     public static HashMap<String, EventClass> getEveniments(String date){
 
         Api retrofitClient = RetrofitClient.createService(Api.class);

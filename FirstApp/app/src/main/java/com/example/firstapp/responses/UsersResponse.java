@@ -5,6 +5,7 @@ import com.example.firstapp.models.Profile;
 import java.util.ArrayList;
 
 public class UsersResponse {
+    // all users response
 
     private ArrayList<Profile> users;
 

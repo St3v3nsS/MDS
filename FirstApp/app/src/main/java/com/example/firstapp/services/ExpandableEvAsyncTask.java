@@ -78,12 +78,14 @@ public class ExpandableEvAsyncTask extends AsyncTask<String, Void, String> {
 
         if(s.equals("SUCCESS!")){
             textView.setVisibility(View.INVISIBLE);
+            expandableListView.setVisibility(View.VISIBLE);
             expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
             expandableListAdapter = new CustomExpandableListAdapter(context, expandableListTitle, expandableListDetail);
             expandableListView.setAdapter(expandableListAdapter);
         }
         else {
             textView.setVisibility(View.VISIBLE);
+            expandableListView.setVisibility(View.INVISIBLE);
         }
     }
 }

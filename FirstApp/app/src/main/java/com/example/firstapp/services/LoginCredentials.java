@@ -3,6 +3,7 @@ package com.example.firstapp.services;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginCredentials {
+    // pass the login credentials for login
 
     private String username;
     private String password;

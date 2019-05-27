@@ -1,6 +1,7 @@
 package com.example.firstapp.responses;
 
 public class PhotoResponse {
+    // the url of photo
 
     private String photo;
 

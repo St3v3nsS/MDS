@@ -3,6 +3,7 @@ package com.example.firstapp.responses;
 import java.util.ArrayList;
 
 public class HoursResponse {
+    // intervals of hours response
 
     private ArrayList<String> hours;
 

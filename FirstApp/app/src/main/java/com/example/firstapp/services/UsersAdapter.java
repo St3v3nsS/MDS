@@ -93,6 +93,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
 
     @Override
     public Filter getFilter() {
+        // filter the users by typed string
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
@@ -121,7 +122,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 usersFiltered = (ArrayList<Profile>) results.values;
                 System.out.println(usersFiltered);
-                notifyDataSetChanged();
+                notifyDataSetChanged(); // notify the holder that the data has changed
             }
         };
     }
@@ -139,6 +140,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
             mView = itemView;
         }
 
+        // set the status
         public void setStatus(String status){
 
             TextView userStatus = (TextView) mView.findViewById(R.id.user_status);
@@ -146,37 +148,41 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
             userStatus.setText(status);
         }
 
+        // set the username
         public void setUsername(String username){
             TextView userUsername = (TextView) mView.findViewById(R.id.user_name);
 
             userUsername.setText(username);
         }
 
+        // handle the add friend button
         public void buttonAction(String status, String username){
 
             Button button = (Button) mView.findViewById(R.id.add_button);
 
             button.setOnClickListener(v->{
+                // create the notification for add friend
                 PendingIntent contentIntent = PendingIntent.getActivity(mView.getContext(), 0,
                         new Intent(mView.getContext(), MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
                 Notification notification = new NotificationCompat.Builder(mView.getContext(), ChannelNotifications.CHANNEL_1)
-                        .setSmallIcon(R.drawable.ic_not_icon)
+                        .setSmallIcon(R.drawable.ic_not_icon) // set the icon
                         .setLargeIcon(BitmapFactory.decodeResource(mView.getContext().getResources(),
                                 R.mipmap.ic_launcher_round))
-                        .setVibrate(new long[] { 1000, 1000 })
-                        .setSound(Uri.parse(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI))
+                        .setVibrate(new long[] { 1000, 1000 }) // activate vibrate
+                        .setSound(Uri.parse(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI)) // and the ringtone
                         .setContentTitle("Friend Request")
                         .setContentText(username + " accepted your friend request!")
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH) // priority of the message
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                         .setContentIntent(contentIntent)
                         .build();
 
-                Integer randomId = new Random().nextInt(799);
+                Integer randomId = new Random().nextInt(799); // create random number to not override existent notification
 
                 Api addFriend = RetrofitClient.createService(Api.class);
                 Call<AddNoteResponse> call = addFriend.addFriend(new Profile(username));
+                // make call to add a friend
                 call.enqueue(new Callback<AddNoteResponse>() {
                     @Override
                     public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
@@ -200,6 +206,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
             });
         }
 
+        // hide the delete button
         private void hideButton(){
             Button delete = mView.findViewById(R.id.delete_friend);
             delete.setVisibility(View.INVISIBLE);

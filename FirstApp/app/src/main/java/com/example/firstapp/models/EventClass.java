@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public class EventClass {
+    // the class for Events
 
     private String name;
     private String startDate;

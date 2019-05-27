@@ -1,6 +1,7 @@
 package com.example.firstapp.models;
 
 public class ResetPassword {
+    // the reset password class for response
 
     private String email;
     private String password;

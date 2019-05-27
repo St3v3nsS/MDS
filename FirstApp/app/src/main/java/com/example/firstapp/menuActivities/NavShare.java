@@ -24,9 +24,9 @@ public class NavShare extends android.support.v4.app.Fragment {
         StringBuilder sb = new StringBuilder();
         sb.append("Hi, I am using the Eventsync App. I like this and I want you to check it out.");
         sb.append("https://play.google.com/store/apps/details?id=" + this.getContext().getPackageName());
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Test");
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Share application");
         sharingIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-        startActivity(Intent.createChooser(sharingIntent, "Test"));
+        startActivity(Intent.createChooser(sharingIntent, "Share our app")); // start the activity with certain message
 
         return rootView;
     }

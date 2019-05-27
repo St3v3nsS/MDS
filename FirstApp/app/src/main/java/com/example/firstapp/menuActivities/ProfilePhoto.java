@@ -63,6 +63,7 @@ public class ProfilePhoto extends Fragment {
 
         getActivity().setTitle("Add profile photo");
 
+        // the floating button for adding photo
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.import_photo);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,10 +92,10 @@ public class ProfilePhoto extends Fragment {
                 else if(options[which].equals("Gallery")){
                     // go to stored photos and choose one
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
+                    intent.setType("image/*"); // the type is set to Image
                     startActivityForResult(intent.createChooser(intent, "Select File"), SELECT_FILE);
                 }
-                else{
+                else{ // if cancel or anywhere click
                     dialog.dismiss();
                 }
             }
@@ -112,23 +113,23 @@ public class ProfilePhoto extends Fragment {
             // if the photo was selected --> add it in the spot available then upload it to the server
             final Bitmap bitmap;
             if(requestCode == REQUEST_CAMERA){
-
+                // save the photo from camera
                 Bundle bundle = data.getExtras();
 
                 bitmap = (Bitmap) bundle.get("data");
                 imageView.setImageBitmap(bitmap);
-                cardView.setVisibility(View.VISIBLE);
-                uploadImage(bitmap);
+                cardView.setVisibility(View.VISIBLE); // show the image on the screen
+                uploadImage(bitmap); // and upload that photo
 
             }
             else if(requestCode == SELECT_FILE){
-
+                // get the image location
                 Uri selectedImageUri = data.getData();
                 imageView.setImageURI(selectedImageUri);
-                cardView.setVisibility(View.VISIBLE);
+                cardView.setVisibility(View.VISIBLE); // show image
                 try{
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
-                    uploadImage(bitmap);
+                    uploadImage(bitmap); // upload the photo
                 }catch (IOException ex){
                     ex.printStackTrace();
                 }
@@ -152,7 +153,8 @@ public class ProfilePhoto extends Fragment {
             try {
 
                 fos = new FileOutputStream(f);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos); // compress the file for transfer
+                // set the body
                 RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), f);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("upload", f.getName(), reqFile);
 
@@ -169,6 +171,7 @@ public class ProfilePhoto extends Fragment {
 
                             NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
                             View header = navigationView.getHeaderView(0);
+                            // add profile to the avatar
                             addProfilePhoto(header);
 
 
@@ -193,8 +196,10 @@ public class ProfilePhoto extends Fragment {
     }
 
     private void addProfilePhoto(View header) {
+        // get the place in header
         ImageView profilePicture = (ImageView) header.findViewById(R.id.profile_picture);
 
+        // get the image from header
         Api api = RetrofitClient.createService(Api.class);
         Call<PhotoResponse> call = api.getProfilePhoto();
 
@@ -206,10 +211,11 @@ public class ProfilePhoto extends Fragment {
 
                 if (response.code() == 200){
                     if (response.body() != null){
+                        // get the photo and update the avatar
                         Toast.makeText(getContext(),"Upload success!", Toast.LENGTH_LONG).show();
                         String url = response.body().getPhoto();
                         Uri imageUri = Uri.parse(url);
-                        Picasso.get().load(imageUri).into(profilePicture);
+                        Picasso.get().load(imageUri).into(profilePicture); // load the image to the avatar
                     }else{
                         Toast.makeText(getContext(), "No image found", Toast.LENGTH_LONG).show();
                     }

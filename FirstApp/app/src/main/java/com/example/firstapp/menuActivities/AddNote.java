@@ -49,6 +49,7 @@ import static com.example.firstapp.services.AddNoteClient.getResponse;
 import static java.util.Arrays.asList;
 
 public class AddNote extends Fragment {
+    // This class creates an event for a given date
 
     private EventClass event;
     private Button addNote;
@@ -58,11 +59,13 @@ public class AddNote extends Fragment {
     private String endDateS;
     private String dateBegin;
 
+    // the main view
     private View rootView;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // inflate the layout in fragment
         rootView =  inflater.inflate(R.layout.fragment_add_note, container, false);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -75,6 +78,7 @@ public class AddNote extends Fragment {
         getData();
         getActivity().setTitle("Add Note");
 
+        // check if we came here from Calendar Next Day or from panel
         Bundle bundle = getArguments();
         if (bundle != null)
             dateBegin = bundle.getString("date");
@@ -82,7 +86,7 @@ public class AddNote extends Fragment {
         return rootView;
     }
 
-
+    // create the start date, end date, name and friends for the event using a timePickerDialog
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void getData() {
         final EditText name = (EditText) rootView.findViewById(R.id.add_note_name);
@@ -95,7 +99,7 @@ public class AddNote extends Fragment {
             int currentMonth = calendar.get(Calendar.MONTH) + 1;            // get the month
             int currentDay = calendar.get(Calendar.DAY_OF_MONTH);//get the day
             TimePickerDialog timePickerDialog = new TimePickerDialog(rootView.getContext(),     // create the dialog
-                    (view, hourOfDay, minute) -> {      // onTimeSet function
+                    (view, hourOfDay, minute) -> {      // onTimeSet function, creating the string with the date
                         StringBuilder sb = new StringBuilder();
                         if(dateBegin == null){
                             sb.append(currentYear+"-");
@@ -120,6 +124,7 @@ public class AddNote extends Fragment {
                         }
                         sb.append(minute);
                         String toShow = sb.toString();
+                        toShow = toShow.replace("T", " ");
 
                         sb.append(":");
                         sb.append(calendar.get(Calendar.SECOND));
@@ -162,6 +167,8 @@ public class AddNote extends Fragment {
                         }
                         sb.append(minute);
                         String toShow = sb.toString();
+                        toShow = toShow.replace("T", " ");
+
 
                         sb.append(":");
                         sb.append(calendar.get(Calendar.SECOND));

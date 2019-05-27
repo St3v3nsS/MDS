@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,51 +82,62 @@ public class MatchingFriends extends DialogFragment {
             }
 
 
-
+            // check if there was a friend pressed
             if(!name.isEmpty()){
+
                 Api api = RetrofitClient.createService(Api.class);
                 Call<HoursResponse> call = api.matchFriend(name);
                 String finalName = name;
-                call.enqueue(new Callback<HoursResponse>() {
+                ProgressBar pb = (ProgressBar) rootView.findViewById(R.id.matching);
+                pb.setVisibility(View.VISIBLE);
+                call.enqueue(new Callback<HoursResponse>() { // make the call to get the intervals for this day
                     @Override
                     public void onResponse(Call<HoursResponse> call, Response<HoursResponse> response) {
                         if(response.code() == 200){
 
-                            if (response.body() != null){
+                            if (response.body() != null){ // if we got some intervals
                                 String[] values = new String[response.body().getHours().size()];
                                 ArrayList<String> hours = response.body().getHours();
 
                                 for(int i = 0; i < hours.size(); i++){
-                                    values[i] = hours.get(i);
+                                    values[i] = hours.get(i); // save them
                                 }
 
+                                // create an alert dialog to show the specific intervals
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("You and " + finalName + " can go together at");
+                                builder.setTitle("You and " + finalName + " can go today together at");
                                 builder.setItems(values, new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(DialogInterface dialog, int which) { // clicking on the date will show a message
                                         Toast.makeText(getContext(), "Go to Add Event fast and create one!"
                                                 ,Toast.LENGTH_LONG).show();
                                     }
                                 });
 
                                 AlertDialog dialog = builder.create();
-                                dialog.show();
+                                pb.setVisibility(View.INVISIBLE);
+                                dialog.show(); // show the dialog
 
-                            }else{
+
+                            }else{ // if no available hours
+                                pb.setVisibility(View.INVISIBLE);
+
                                 Toast.makeText(getContext(), "No hours available, please try again later!"
                                         ,Toast.LENGTH_LONG).show();
                             }
-                        }else{
+                        }else{ // wrong response code from server
                             System.out.println(response.code());
+                            pb.setVisibility(View.INVISIBLE);
                             Toast.makeText(getContext(), "Something went wrong. Try again later!", Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<HoursResponse> call, Throwable throwable) {
+                    public void onFailure(Call<HoursResponse> call, Throwable throwable) { // something went bad on server
                         Toast.makeText(getContext(), "Something went wrong. Try again later!", Toast.LENGTH_LONG).show();
                         call.cancel();
+                        pb.setVisibility(View.INVISIBLE);
+
                     }
                 });
             }

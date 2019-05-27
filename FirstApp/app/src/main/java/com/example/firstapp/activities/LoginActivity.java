@@ -55,6 +55,7 @@ public class LoginActivity extends Activity {
 
     }
 
+
     private void onForgotClick() {
 
         // this creates a new instance of ForgotPassword

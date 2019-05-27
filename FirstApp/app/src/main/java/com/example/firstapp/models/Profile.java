@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 public class  Profile implements Serializable {
+    // the profile class
 
     @NotNull
     private String username;

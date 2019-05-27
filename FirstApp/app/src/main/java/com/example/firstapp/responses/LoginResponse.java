@@ -1,6 +1,7 @@
 package com.example.firstapp.responses;
 
 public class LoginResponse {
+    // the login response
 
     private String username;
     private String email;

@@ -104,6 +104,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             return mView;
         }
 
+        // set the status
         public void setStatus(String status){
 
             TextView friendStatus = (TextView) mView.findViewById(R.id.user_status);
@@ -111,18 +112,21 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             friendStatus.setText(status);
         }
 
+        // set the username
         public void setUsername(String username){
             TextView friendUsername = (TextView) mView.findViewById(R.id.user_name);
 
             friendUsername.setText(username);
         }
 
+        // get the username
         public String getUsername(){
             TextView friendUsername = (TextView) mView.findViewById(R.id.user_name);
 
             return friendUsername.getText().toString();
         }
 
+        // handle on delete click button of friend
         public void onButtonClick(Profile profile) {
             Button delete = (Button) mView.findViewById(R.id.delete_friend);
 

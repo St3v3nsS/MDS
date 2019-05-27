@@ -44,6 +44,7 @@ public class CalendarNextDays extends Fragment {
         return rootView;
     }
 
+
     private void showCustomDialog(int year, int month, int dayOfMonth, ViewGroup container) {
         // if we changed the date, show the alert dialog to choose from
 

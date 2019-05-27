@@ -18,12 +18,10 @@ public class AddNoteClient {
                                    final FragmentTransaction fragmentTransaction){
         Api patchEvent = RetrofitClient.createService(Api.class);
         Call<AddNoteResponse> call = patchEvent.addEvent(event);
-        System.out.println("Before Callback");
         call.enqueue(new Callback<AddNoteResponse>() {
             @Override
             public void onResponse(Call<AddNoteResponse> call, Response<AddNoteResponse> response) {
-                System.out.println("in onresp");
-                callback.onResponse(myNote, fragmentTransaction);
+                callback.onResponse(myNote, fragmentTransaction); // refresh after added new event
 
             }
 

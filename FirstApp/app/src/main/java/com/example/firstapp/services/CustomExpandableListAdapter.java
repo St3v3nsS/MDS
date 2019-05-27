@@ -86,6 +86,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.expandedListItem);
         expandedListTextView.setText(expandedListText.toString());
 
+        // delete event button and on click handler
         Button deleteEvent = (Button) convertView.findViewById(R.id.delete_event);
         deleteEvent.setOnClickListener(ev->{
             Api api = RetrofitClient.createService(Api.class);

@@ -1,6 +1,7 @@
 package com.example.firstapp.models;
 
 public class CodeChecker {
+    // the response for code verification call
 
     private String email;
     private String code;

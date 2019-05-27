@@ -1,6 +1,7 @@
 package com.example.firstapp.responses;
 
 public class AddNoteResponse {
+    // response for the add event
 
     private String message;
 

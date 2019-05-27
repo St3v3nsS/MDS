@@ -1,6 +1,7 @@
 package com.example.firstapp.models;
 
 public class StringBody {
+    // simple string class for simple responses
 
     private String email;
 

@@ -1,6 +1,7 @@
 package com.example.firstapp.services;
 
 public class SignUpCredentials {
+    // signup credentials
 
     private String username;
     private String email;

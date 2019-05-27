@@ -5,6 +5,7 @@ import com.example.firstapp.models.Profile;
 import java.util.ArrayList;
 
 public class FriendsResponse {
+    // response for friends call
 
     private ArrayList<Profile> friends;
 
