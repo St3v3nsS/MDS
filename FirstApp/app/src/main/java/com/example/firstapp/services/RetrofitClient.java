@@ -12,8 +12,8 @@ public class RetrofitClient {
             .addInterceptor(new AddCookieInterceptor()) // adding cookies
             .addInterceptor(new ReceivedCookieInterceptor()); // receiving cookies
 
-    private static final String API_BASE_URL = //"http://172.20.10.3:3000";
-            "http://192.168.1.8:3000";
+    private static final String API_BASE_URL = "http://172.20.10.3:3000";
+            //"http://192.168.1.8:3000";
             //"https://secure-ravine-64168.herokuapp.com";
              //"http://192.168.0.134:3000";
             //"http://10.0.2.2:3000/";

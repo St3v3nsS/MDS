@@ -7,14 +7,18 @@
     android:background="@drawable/gradient"
     tools:context=".activities.SignUp">
 
-    <ImageView
+    <TextView
         android:id="@+id/logo"
-        android:layout_width="120dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/logo_skype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:fontFamily="@font/lionteen"
+        android:text="@string/eventsync"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp" />
+
 
     <EditText
         android:id="@+id/sign_username"
