@@ -1,14 +1,17 @@
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:events");
-const dmp = require("util").inspect;
-
 const express = require("express");
 const AM = require("../modules/account-manager");
 
+/**
+ * Create route friends
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
-    // Middleware for checking credentials
+    /**
+     * Middleware for checking credentials
+     */
     router.use("/", function (req, res, next) {
         AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {
             if (error) {
@@ -25,6 +28,9 @@ module.exports = function (app) {
 
     });
 
+    /**
+     * GET all friends of a user from database
+     */
     router.get("/", function (req, res, next) {
         app.dbs.users.findOne(
             {
@@ -66,6 +72,9 @@ module.exports = function (app) {
         );
     });
 
+    /**
+     * Post a new friend to a user friends list from database
+     */
     router.post("/", function (req, res, next) {
         const username = req.body.username;
 
@@ -132,6 +141,9 @@ module.exports = function (app) {
         );
     });
 
+    /**
+     * Delete a friend of a user
+     */
     router.post("/del", function (req, res, next) {
         const username = req.body.username;
 

@@ -1,23 +1,19 @@
-// tools for debugging
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:events");
-const dmp = require("util").inspect;
-
-// import modules
 const express = require("express");
 const AM = require("../modules/account-manager");
 const moment = require("moment");
 
+/**
+ * Create route events
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
-    // Middleware for checking credentials
+    /**
+     * Middleware for checking credentials
+     */
     router.use("/", function (req, res, next) {
-        console.log({
-            "login": req.cookies.login,
-            "ip": req.ip
-        });
-
         AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {
             if (error) {
                 return next(error);
@@ -34,7 +30,9 @@ module.exports = function (app) {
 
     });
 
-    // POST a new event to database
+    /**
+     * POST a new event to database
+     */
     router.post("/", function (req, res, next) {
         let username = null;
         if (!req.body["username"]) {
@@ -93,9 +91,9 @@ module.exports = function (app) {
                 if (err) {
                     return next(err);
                 }
-                console.log("succes insert");
 
                 results["message"] = "ok";
+
                 res.json({
                     "message": "ok"
                 });
@@ -103,7 +101,9 @@ module.exports = function (app) {
         );
     });
 
-    // GET all events for a user from database
+    /**
+     * GET all events for a user from database
+     */
     router.get("/", function (req, res, next) {
         let username = null;
         if (!req.body["username"]) {
@@ -128,7 +128,7 @@ module.exports = function (app) {
                         "friends": documents[i].friends
                     });
                 }
-                console.log(auxArray);
+
                 res.json({
                     "events": auxArray
                 });
@@ -139,7 +139,9 @@ module.exports = function (app) {
         });
     });
 
-    // Delete route
+    /**
+     * Delete event
+     */
     router.post("/del", function (req, res, next) {
         let name = req.body.name;
 

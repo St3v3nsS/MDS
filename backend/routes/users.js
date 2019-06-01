@@ -1,12 +1,16 @@
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:events");
-const dmp = require("util").inspect;
-
 const express = require("express");
 
+/**
+ * Create route users
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
+    /**
+     * GET all users from database
+     */
     router.get("/", function (req, res, next) {
         app.dbs.users.find(
             {},

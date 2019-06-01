@@ -1,6 +1,9 @@
 const crypto = require("crypto");
-const moment = require("moment");
 
+/**
+ * Generate a random version of Globally Unique Identifier using random numbers
+ * @returns {string}
+ */
 const guid = function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
             function(c) {
@@ -10,6 +13,14 @@ const guid = function () {
         );
 };
 
+/**
+ * Perform an auto login into an account saved in usersCollection from database
+ * using the username and password for validation
+ * @param usersCollection
+ * @param user
+ * @param pass
+ * @param callback
+ */
 exports.autoLogin = function (usersCollection, user, pass, callback) {
     usersCollection.findOne(
             {"username": user},
@@ -28,6 +39,14 @@ exports.autoLogin = function (usersCollection, user, pass, callback) {
         );
 };
 
+/**
+ * Generate a unique cookie for a user ( using guid function) to login
+ * without password and save this key into usersCollection from database
+ * @param usersCollection
+ * @param user
+ * @param ipAdress
+ * @param callback
+ */
 exports.generateLoginKey = function (usersCollection, user, ipAdress, callback) {
     let cookie = guid();
     usersCollection.findOneAndUpdate(
@@ -55,40 +74,27 @@ exports.generateLoginKey = function (usersCollection, user, ipAdress, callback) 
         );
 };
 
+/**
+ * Ensure the cookie maps to the user's last recorded ip address
+ * @param usersCollection
+ * @param cookie
+ * @param ipAddress
+ * @param callback
+ */
 exports.validateLoginKey = function (usersCollection, cookie, ipAddress, callback) {
-    // ensure the cookie maps to the user's last recorded ip address
     usersCollection.findOne({"cookie": cookie, "ip": ipAddress}, callback);
 };
 
-exports.generatePasswordKey = function (usersCollection, email, ipAddress, callback) {
-    let passKey = guid();
-    usersCollection.findOneAndUpdate(
-        {"email": email},
-        {
-            "$set":
-                {
-                    "ip": ipAddress,
-                    "passKey": passKey
-                },
-            "$unset":
-                {
-                    "cookie": ''
-                }
-        },
-        {
-            "returnOriginal": false
-        },
-        function (error, result) {
-            if (result.value != null) {
-                return callback(null, result.value);
-            }
-            else {
-                return callback(error || "account not found");
-            }
-        }
-    );
-};
-
+/**
+ * When a user forget his password a security code is created
+ * and is put in the database. The function updateSecurityKey
+ * is updating the security code in database.
+ * @param usersCollection
+ * @param email
+ * @param ipAddress
+ * @param securityCode
+ * @param callback
+ */
 exports.updateSecurityKey = function (usersCollection, email, ipAddress, securityCode, callback) {
     usersCollection.findOneAndUpdate(
         {"email": email},
@@ -117,6 +123,16 @@ exports.updateSecurityKey = function (usersCollection, email, ipAddress, securit
     );
 };
 
+/**
+ * When a user forget his password a security code is sent
+ * via email to be validated. If the security code inserted
+ * by user is the same as the security code from database
+ * the user can change his password.
+ * @param usersCollection
+ * @param email
+ * @param securityCode
+ * @param callback
+ */
 exports.validateSecurityCode = function (usersCollection, email, securityCode, callback) {
     usersCollection.findOneAndUpdate(
         {
@@ -148,35 +164,13 @@ exports.validateSecurityCode = function (usersCollection, email, securityCode, c
     );
 };
 
-exports.validatePasswordKey = function (usersCollection, passKey, ipAddress, callback) {
-    // ensure the passKey maps to the user's last record ip address
-    usersCollection.findOneAndUpdate(
-        {"email": email},
-        {
-            "$set":
-                {
-                    "ip": ipAddress,
-                    "passKey": passKey
-                },
-            "$unset":
-                {
-                    "cookie": ''
-                }
-        },
-        {
-            "returnOriginal": false
-        },
-        function (error, result) {
-            if (result.value != null) {
-                return callback(null, result.value);
-            }
-            else {
-                return callback(error || "account not found");
-            }
-        }
-    );
-};
-
+/**
+ * Update the password for a user.
+ * @param usersCollection
+ * @param email
+ * @param newPass
+ * @param callback
+ */
 exports.updatePassword = function (usersCollection, email, newPass, callback) {
     exports.saltAndHash(newPass, function (hash) {
         newPass = hash;
@@ -203,10 +197,21 @@ exports.updatePassword = function (usersCollection, email, newPass, callback) {
     });
 };
 
+/**
+ * Delete an account from database
+ * @param usersCollection
+ * @param id
+ * @param callback
+ */
 exports.deleteAccount = function (usersCollection, id, callback) {
     usersCollection.deleteOne({"_id": getObjectId(id)}, callback);
 };
 
+/**
+ * Delete all accounts from database
+ * @param usersCollection
+ * @param callback
+ */
 exports.deleteAllAcounts = function (usersCollection, callback) {
     usersCollection.deleteMany({}, callback);
 };

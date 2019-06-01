@@ -1,16 +1,17 @@
-// tools for debugging
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:login");
-const dmp = require("util").inspect;
-
-// import modules
 const express = require("express");
 const AM = require("../modules/account-manager");
 
+/**
+ * Create route login
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
-    // Middleware for auto login
+    /**
+     * Middleware for auto login
+     */
     router.use('/', function (req, res, next) {
         // check if the user has an auto login saved in a cookie
         if (req.cookies.login === undefined) {
@@ -45,7 +46,9 @@ module.exports = function (app) {
         }
     });
 
-    // Middleware for checking if username is valid
+    /**
+     * Middleware for checking if username is valid
+     */
     router.use(function (req, res, next) {
         if (!req.body.username) {
             return next(new Error("No username"));
@@ -59,7 +62,9 @@ module.exports = function (app) {
         return next();
     });
 
-    // Middleware for checking username duplicate
+    /**
+     * Middleware for checking username duplicate
+     */
     router.use(function (req, res, next){
         app.dbs.users.findOne(
             {"username": req.body.username},
@@ -82,7 +87,9 @@ module.exports = function (app) {
         );
     });
 
-    // Middleware for password validation
+    /**
+     * Middleware for password validation
+     */
     router.use(function (req, res, next) {
         if (!req.body.password) {
             return next(new Error("no password"));
@@ -91,10 +98,10 @@ module.exports = function (app) {
         return next();
     });
 
+    /**
+     * Manual login
+     */
     router.post("/", function(req, res, next) {
-
-        debug("login: " + dmp(req.body));
-        console.log(req.body.password);
         // insert in mongo
         app.dbs.users.findOne(
             {"username": req.body.username},

@@ -1,4 +1,4 @@
-/*
+/**
  * Import modules
  */
 const MongoClient = require("mongodb").MongoClient;
@@ -13,8 +13,7 @@ const configuration = require("./configuration");
 const app = express();
 const serverPort = process.env.PORT || configuration.serverPort;
 
-// Set morgan for development
-// todo: to be removed when it's in production
+// Set morgan for development or production
 if (app.get("env") === "development") {
     app.use(morgan("dev"));
 }
@@ -24,6 +23,16 @@ else {
 
 console.log("Startup " + new Date());
 
+/**
+ * Use async.auto to determine the best order for running the tasks, based
+ * on their requirements. Each function depend on other functions being
+ * completed first and each function is run as soon as its requirements
+ * are satisfied:
+ *      -> First task will establish a connection to MongoDB and will create
+ *      an object that will contain the collections users and events from db;
+ *      -> Second task will set the routes that will be available on server;
+ *      -> Third task will start the server.
+ */
 async.auto({
         mongodb: [function (callback) {
             const client = new MongoClient(configuration.dburl, {useNewUrlParser: true});

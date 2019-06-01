@@ -1,13 +1,12 @@
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:events");
-const dmp = require("util").inspect;
-
 const express = require("express");
 const multer = require("multer");
 const del = require("del");
 const cloudinary = require("cloudinary").v2;
 const AM = require("../modules/account-manager");
 
+/**
+ * To store profile photo we use a third party API called cloudinary.
+ */
 cloudinary.config({
     cloud_name: "syncevent",
     api_key: "724147596452914",
@@ -25,11 +24,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+/**
+ * Create route profile_photo
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
     let username = null;
 
-    // Middleware for checking credentials
+    /**
+     * Middleware for checking credentials
+     */
     router.use("/", function (req, res, next) {
         AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {
             if (error) {
@@ -46,6 +52,9 @@ module.exports = function (app) {
 
     });
 
+    /**
+     * GET profile photo URL from database
+     */
     router.get("/", function (req, res, next) {
         app.dbs.users.findOne(
             {
@@ -65,6 +74,9 @@ module.exports = function (app) {
         );
     });
 
+    /**
+     * POST a photo to cloudinary and a URL to that photo into database.
+     */
     router.post("/", upload.single("upload"), function (req, res, next) {
         let tmp_path = req.file.path;
         cloudinary.uploader.upload(tmp_path, {tags: "basic_avatar"}, function (err, image) {

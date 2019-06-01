@@ -1,19 +1,19 @@
-// tools for debugging
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:register");
-const dmp = require("util").inspect;
-
-// import modules
 const express = require("express");
 const Isemail = require("isemail");
 const moment = require("moment");
 const AM = require("../modules/account-manager");
 
+/**
+ * Create route register
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
-    // Middleware for checking if email is valid
-    // todo: refactor as a extern function in other file
+    /**
+     * Middleware for checking if email is valid
+     */
     router.use(function (req, res, next) {
         if (!req.body.email) {
             return next(new Error("No email"));
@@ -26,7 +26,9 @@ module.exports = function (app) {
         return next(new Error("Invalid email"));
     });
 
-    // Middleware for checking if email is already used
+    /**
+     * Middleware for checking if email is already used
+     */
     router.use(function (req, res, next) {
         app.dbs.users.findOne(
             {"email": req.body.email},
@@ -49,7 +51,9 @@ module.exports = function (app) {
         );
     });
 
-    // Middleware for checking if username is valid
+    /**
+     * Middleware for checking if username is valid
+     */
     router.use(function (req, res, next) {
         if (!req.body.username) {
             return next(new Error("No username"));
@@ -63,7 +67,9 @@ module.exports = function (app) {
         return next();
     });
 
-    // Middleware for checking username duplicate
+    /**
+     * Middleware for checking username duplicate
+     */
     router.use(function (req, res, next){
         app.dbs.users.findOne(
             {"username": req.body.username},
@@ -86,7 +92,9 @@ module.exports = function (app) {
         );
     });
 
-    // Middleware for password validation
+    /**
+     * Middleware for password validation
+     */
     router.use(function (req, res, next) {
         if (!req.body.password) {
             return next(new Error("no password"));
@@ -95,9 +103,10 @@ module.exports = function (app) {
         return next();
     });
 
+    /**
+     * Insert a new user in database
+     */
     router.post("/", function (req, res, next) {
-
-        debug("register: " + dmp(req.body));
         // insert in mongo
         AM.saltAndHash(req.body.password, function (hash) {
             app.dbs.users.insertOne(
@@ -120,7 +129,6 @@ module.exports = function (app) {
                         "message": "OK"
                     };
 
-                    // Succes insertion in db
                     return res.json(registerObject);
                 }
             );

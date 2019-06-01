@@ -1,23 +1,19 @@
-// tools for debugging
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:events");
-const dmp = require("util").inspect;
-
-// import modules
 const express = require("express");
 const AM = require("../modules/account-manager");
 const moment = require("moment");
 
+/**
+ * Create route match_friends
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
-    // Middleware for checking credentials
+    /**
+     * Middleware for checking credentials
+     */
     router.use("/", function (req, res, next) {
-        console.log({
-            "login": req.cookies.login,
-            "ip": req.ip
-        });
-
         AM.validateLoginKey(app.dbs.users, req.cookies.login, req.ip, function (error, results) {
             if (error) {
                 return next(error);
@@ -34,6 +30,9 @@ module.exports = function (app) {
 
     });
 
+    /**
+     * GET intervals available for two users
+     */
     router.get("/", async function (req, res, next) {
         let day = moment().date();
         let username = req.query.name;

@@ -1,16 +1,18 @@
-// todo: to be removed when it's in production
-const debug = require("debug")("mds:server:events");
-const dmp = require("util").inspect;
-
 const express = require("express");
 const AM = require("../modules/account-manager");
 const Isemail = require("isemail");
 
-
+/**
+ * Create route new_password
+ * @param app
+ * @returns {Router}
+ */
 module.exports = function (app) {
     let router = new express.Router();
 
-    // Middleware to check if the email is valid
+    /**
+     * Middleware to check if the email is valid
+     */
     router.use(function (req, res, next) {
         if (!req.body.email) {
             return next(new Error("No email"));
@@ -23,7 +25,9 @@ module.exports = function (app) {
         return next(new Error("Invalid email"));
     });
 
-    // Middleware for checking if email is already used
+    /**
+     * Middleware for checking if email is already used
+     */
     router.use(function (req, res, next) {
         app.dbs.users.findOne(
             {"email": req.body.email},
@@ -46,7 +50,9 @@ module.exports = function (app) {
         );
     });
 
-
+    /**
+     * Change password in database.
+     */
     router.post('/', function (req, res, next) {
         const email = req.body.email;
         const password = req.body.password;
